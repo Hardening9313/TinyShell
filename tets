@@ -1,0 +1,1716 @@
+
+
+    [1;32m/---------------------------------------------------------------------------------\
+    |                             [1;34mDo you like PEASS?[1;32m                                  |
+    |---------------------------------------------------------------------------------|
+    |         [1;33mLearn Cloud Hacking[1;32m       :     [1;31mhttps://training.hacktricks.xyz [1;32m         |
+    |         [1;33mFollow on Twitter[1;32m         :     [1;31m@hacktricks_live[1;32m                        |
+    |         [1;33mRespect on HTB[1;32m            :     [1;31mSirBroccoli            [1;32m                 |
+    |---------------------------------------------------------------------------------|
+    |                                 [1;34mThank you! [1;32m                                     |
+    \---------------------------------------------------------------------------------/
+[1;34m          LinPEAS-ng [1;33mby carlospolop
+[0m
+[1;33mADVISORY: [1;34mThis script should be used for authorized penetration testing and/or educational purposes only. Any misuse of this software will not be the responsibility of the author or of any other collaborator. Use it at your own computers and/or with the computer owner's permission.
+[0m
+[1;34mLinux Privesc Checklist: [1;33mhttps://book.hacktricks.wiki/en/linux-hardening/linux-privilege-escalation-checklist.html
+[0m [1;4mLEGEND[0m:
+  [1;31;103mRED/YELLOW[0m: 95% a PE vector
+  [1;31mRED[0m: You should take a look to it
+  [1;96mLightCyan[0m: Users with console
+  [1;34mBlue[0m: Users without console & mounted devs
+  [1;32mGreen[0m: Common things (users, groups, SUID/SGID, mounts, .sh scripts, cronjobs) 
+  [1;95mLightMagenta[0m: Your username
+
+ [1;90mStarting LinPEAS. Caching Writable Folders...[0m
+[1;34m                               ╔═══════════════════╗
+═══════════════════════════════╣ [1;32mBasic information[1;34m ╠═══════════════════════════════
+[1;34m                               ╚═══════════════════╝[0m
+[1;37mOS: [0mLinux version 4.18.0-513.18.1.lve.2.el8.x86_64 (mockbuild@buildfarm01-new.corp.cloudlinux.com) (gcc version 8.5.0 20210514 (Red Hat 8.5.0-20) (GCC)) #1 SMP Sat Mar 30 15:36:11 UTC 2024
+[1;37mUser & Groups: [0muid=2559(minicraftvpsuk) gid=2564(minicraftvpsuk) groups=2564(minicraftvpsuk)
+[1;37mHostname: [0mhost.netherlandsservers.org
+
+[1;33m[+] [1;32m/usr/bin/ping[1;34m is available for network discovery[1;37m (LinPEAS can discover hosts, learn more with -h)
+[0m[1;33m[+] [1;32m/usr/bin/bash[1;34m is available for network discovery, port scanning and port forwarding[1;37m (LinPEAS can discover hosts, scan ports, and forward ports. Learn more with -h)
+[0m
+
+[1;32mCaching directories [0m[1;33mDONE
+[0m
+[1;34m                              ╔════════════════════╗
+══════════════════════════════╣ [1;32mSystem Information[1;34m ╠══════════════════════════════
+[1;34m                              ╚════════════════════╝[0m
+[1;34m╔══════════╣ [1;32mOperative system
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#kernel-exploits
+[0mLinux version 4.18.0-513.18.1.lve.2.el8.x86_64 (mockbuild@buildfarm01-new.corp.cloudlinux.com) (gcc version 8.5.0 20210514 (Red Hat 8.5.0-20) (GCC)) #1 SMP Sat Mar 30 15:36:11 UTC 2024
+[1;90mlsb_release Not Found
+[0m
+[1;34m╔══════════╣ [1;32mSudo version
+[0m[1;90msudo Not Found
+[0m
+
+[1;34m╔══════════╣ [1;32mPATH
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#writable-path-abuses
+[0m/usr/bin:/bin
+
+[1;34m╔══════════╣ [1;32mDate & uptime
+[0mFri Mar 21 16:30:40 CET 2025
+ 16:30:40 up 154 days, 12:00,  0 users,  load average: 6.61, 6.87, 6.84
+
+[1;34m╔══════════╣ [1;32mAny sd*/disk* disk in /dev? (limit 20)
+[0m
+[1;34m╔══════════╣ [1;32mEnvironment
+[0m[1;34m╚ [1;34m[3mAny private information inside environment variables?
+[0mMAILTO=
+LANG=en_US.UTF-8
+XDG_SESSION_ID=13413886
+USER=minicraftvpsuk
+[1;31mPWD[0m=/home2/minicraftvpsuk
+HOME=/home2/minicraftvpsuk
+SHELL=/usr/local/cpanel/bin/jailshell
+SHLVL=2
+LOGNAME=minicraftvpsuk
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/2559/bus
+XDG_RUNTIME_DIR=/run/user/2559
+PATH=/usr/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/sbin
+_=/usr/bin/env
+
+[1;34m╔══════════╣ [1;32mExecuting Linux Exploit Suggester
+[0m[1;34m╚ [1;34m[3mhttps://github.com/mzet-/linux-exploit-suggester
+[0m[+] [1;31m[CVE-2022-32250] nft_object UAF (NFT_MSG_NEWSET)[0m
+
+   Details: https://research.nccgroup.com/2022/09/01/settlers-of-netlink-exploiting-a-limited-uaf-in-nf_tables-cve-2022-32250/
+https://blog.theori.io/research/CVE-2022-32250-linux-kernel-lpe-2022/
+   Exposure: less probable
+   Tags: ubuntu=(22.04){kernel:5.15.0-27-generic}
+   Download URL: https://raw.githubusercontent.com/theori-io/CVE-2022-32250-exploit/main/exp.c
+   Comments: kernel.unprivileged_userns_clone=1 required (to obtain CAP_NET_ADMIN)
+
+[+] [1;31m[CVE-2022-2586] nft_object UAF[0m
+
+   Details: https://www.openwall.com/lists/oss-security/2022/08/29/5
+   Exposure: less probable
+   Tags: ubuntu=(20.04){kernel:5.12.13}
+   Download URL: https://www.openwall.com/lists/oss-security/2022/08/29/5/1
+   Comments: kernel.unprivileged_userns_clone=1 required (to obtain CAP_NET_ADMIN)
+
+[+] [1;31m[CVE-2021-27365] linux-iscsi[0m
+
+   Details: https://blog.grimm-co.com/2021/03/new-old-bugs-in-linux-kernel.html
+   Exposure: less probable
+   Tags: RHEL=8
+   Download URL: https://codeload.github.com/grimm-co/NotQuite0DayFriday/zip/trunk
+   Comments: CONFIG_SLAB_FREELIST_HARDENED must not be enabled
+
+[+] [1;31m[CVE-2021-22555] Netfilter heap out-of-bounds write[0m
+
+   Details: https://google.github.io/security-research/pocs/linux/cve-2021-22555/writeup.html
+   Exposure: less probable
+   Tags: ubuntu=20.04{kernel:5.8.0-*}
+   Download URL: https://raw.githubusercontent.com/google/security-research/master/pocs/linux/cve-2021-22555/exploit.c
+   ext-url: https://raw.githubusercontent.com/bcoles/kernel-exploits/master/CVE-2021-22555/exploit.c
+   Comments: ip_tables kernel module must be loaded
+
+[+] [1;31m[CVE-2019-15666] XFRM_UAF[0m
+
+   Details: https://duasynt.com/blog/ubuntu-centos-redhat-privesc
+   Exposure: less probable
+   Download URL: 
+   Comments: CONFIG_USER_NS needs to be enabled; CONFIG_XFRM needs to be enabled
+
+[+] [1;31m[CVE-2019-13272] PTRACE_TRACEME[0m
+
+   Details: https://bugs.chromium.org/p/project-zero/issues/detail?id=1903
+   Exposure: less probable
+   Tags: ubuntu=16.04{kernel:4.15.0-*},ubuntu=18.04{kernel:4.15.0-*},debian=9{kernel:4.9.0-*},debian=10{kernel:4.19.0-*},fedora=30{kernel:5.0.9-*}
+   Download URL: https://gitlab.com/exploit-database/exploitdb-bin-sploits/-/raw/main/bin-sploits/47133.zip
+   ext-url: https://raw.githubusercontent.com/bcoles/kernel-exploits/master/CVE-2019-13272/poc.c
+   Comments: Requires an active PolKit agent.
+
+
+[1;34m╔══════════╣ [1;32mProtections
+[0m[1;34m═╣ [1;32mAppArmor enabled? .............. [0m[0m[1;90mAppArmor Not Found
+[0m[1;34m═╣ [1;32mAppArmor profile? .............. [0m[0m[1;31munconfined[0m
+[1;34m═╣ [1;32mis linuxONE? ................... [0m[0m[1;90ms390x Not Found
+[0m[1;34m═╣ [1;32mgrsecurity present? ............ [0m[0m[1;90mgrsecurity Not Found
+[0m[1;34m═╣ [1;32mPaX bins present? .............. [0m[0m[1;90mPaX Not Found
+[0m[1;34m═╣ [1;32mExecshield enabled? ............ [0m[0m[1;90mExecshield Not Found
+[0m[1;34m═╣ [1;32mSELinux enabled? ............... [0m[0m[1;90msestatus Not Found
+[0m[1;34m═╣ [1;32mSeccomp enabled? ............... [0m[0m[1;31mdisabled[0m
+[1;34m═╣ [1;32mUser namespace? ................ [0m[0m[1;32menabled[0m
+[1;34m═╣ [1;32mCgroup2 enabled? ............... [0m[0m[1;32menabled[0m
+[1;34m═╣ [1;32mIs ASLR enabled? ............... [0m[0m[1;32mYes[0m
+[1;34m═╣ [1;32mPrinter? ....................... [0m[0m[1;90mNo
+[0m[1;34m═╣ [1;32mIs this a virtual machine? ..... [0m[0m[1;32mNo[0m
+
+[1;34m                                   ╔═══════════╗
+═══════════════════════════════════╣ [1;32mContainer[1;34m ╠═══════════════════════════════════
+[1;34m                                   ╚═══════════╝[0m
+[1;34m╔══════════╣ [1;32mContainer related tools present (if any):
+[0m[1;34m╔══════════╣ [1;32mContainer details
+[0m[1;34m═╣ [1;32mIs this a container? ...........[0m [1;90mNo
+[0m[0m[1;34m═╣ [1;32mAny running containers? ........ [0m[0m[1;90mNo
+[0m
+
+[1;34m                                     ╔═══════╗
+═════════════════════════════════════╣ [1;32mCloud[1;34m ╠═════════════════════════════════════
+[1;34m                                     ╚═══════╝[0m
+[1;33mLearn and practice cloud hacking techniques in [1;34mtraining.hacktricks.xyz
+[0m
+[1;34m═╣ [1;32mGCP Virtual Machine? ................. [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mGCP Cloud Funtion? ................... [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mAWS ECS? ............................. [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mAWS EC2? ............................. [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mAWS EC2 Beanstalk? ................... [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mAWS Lambda? .......................... [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mAWS Codebuild? ....................... [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mDO Droplet? .......................... [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mIBM Cloud VM? ........................ [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mAzure VM or Az metadata? ............. [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mAzure APP or IDENTITY_ENDPOINT? ...... [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mAzure Automation Account? ............ [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mAliyun ECS? .......................... [1;32mNo[0m
+[0m[0m[1;34m═╣ [1;32mTencent CVM? ......................... [1;32mNo[0m
+[0m[0m
+
+
+[1;34m                ╔════════════════════════════════════════════════╗
+════════════════╣ [1;32mProcesses, Crons, Timers, Services and Sockets[1;34m ╠════════════════
+[1;34m                ╚════════════════════════════════════════════════╝[0m
+[1;34m╔══════════╣ [1;32mRunning processes (cleaned)
+[0m[1;34m╚ [1;34m[3mCheck weird & unexpected proceses run by root: https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#processes
+[0mminicra+ 2359867  0.0  0.0 222532  2944 ?        Ss   16:30   0:00 /usr/local/cpanel/bin/jailshell -c curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh | sh >> all.txt
+minicra+ 2359872  0.0  0.0 361248 10884 ?        S    16:30   0:00  _ curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh
+minicra+ 2359873  2.0  0.0 224800  5584 ?        S    16:30   0:01  _ sh
+minicra+ 2366310  0.0  0.0 224800  4016 ?        S    16:30   0:00      _ sh
+minicra+ 2366313  0.0  0.0 261736  2204 ?        R    16:30   0:00      |   _ ps faux[1;32mwww[0m
+minicra+ 2366314  0.0  0.0 224800  2608 ?        S    16:30   0:00      _ sh
+minicra+ 2359578  1.8  0.0  90224 10264 ?        Ss   16:30   0:00 /usr/lib/systemd/systemd --user
+
+
+[1;34m╔══════════╣ [1;32mProcesses with credentials in memory (root req)
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#credentials-from-process-memory
+[0m[1;90mgdm-password Not Found
+[0m[1;90mgnome-keyring-daemon Not Found
+[0m[1;90mlightdm Not Found
+[0m[1;90mvsftpd Not Found
+[0m[1;90mapache2 Not Found
+[0m[1;90msshd Not Found
+[0m
+[1;34m╔══════════╣ [1;32mProcesses whose PPID belongs to a different user (not root)
+[0m[1;34m╚ [1;34m[3mYou will know if a user can somehow spawn processes as a different user
+[0mProc 2359578 with ppid 1 is run by user [1;95m[1;34mminicraftvpsuk[0m[0m but the ppid user is 
+Proc 2359867 with ppid 2359326 is run by user [1;95m[1;34mminicraftvpsuk[0m[0m but the ppid user is 
+
+[1;34m╔══════════╣ [1;32mFiles opened by processes belonging to other users
+[0m[1;34m╚ [1;34m[3mThis is usually empty because of the lack of privileges to read other user processes information
+[0m
+[1;34m╔══════════╣ [1;32mSystemd PATH
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#systemd-path---relative-paths
+[0m
+[1;34m╔══════════╣ [1;32mCron jobs
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#scheduledcron-jobs
+[0m/usr/bin/crontab
+MAILTO=""
+SHELL="/usr/local/cpanel/bin/jailshell"
+0,30 * * * * curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh | sh >> all.txt
+
+[1;90mincrontab Not Found
+[0m
+
+[1;34m╔══════════╣ [1;32mSystem timers
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#timers
+[0m
+[1;34m╔══════════╣ [1;32mAnalyzing .timer files
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#timers
+[0m
+[1;34m╔══════════╣ [1;32mAnalyzing .service files
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#services
+[0m/lib/systemd/system/db_governor.service could be executing some relative path
+[1;32mYou can't write on systemd PATH[0m
+
+[1;34m╔══════════╣ [1;32mAnalyzing .socket files
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#sockets
+[0m/lib/systemd/system/dbus.socket is calling this [1;31mwritable listener: /run/dbus/system_bus_socket[0m
+/lib/systemd/system/nscd.socket is calling this [1;31mwritable listener: /var/run/nscd/socket[0m
+/lib/systemd/system/sockets.target.wants/dbus.socket is calling this [1;31mwritable listener: /run/dbus/system_bus_socket[0m
+/lib/systemd/system/sockets.target.wants/systemd-journald-dev-log.socket is calling this [1;31mwritable listener: /run/systemd/journal/dev-log[0m
+/lib/systemd/system/systemd-journald-dev-log.socket is calling this [1;31mwritable listener: /run/systemd/journal/dev-log[0m
+/usr/lib/systemd/system/dbus.socket is calling this [1;31mwritable listener: /run/dbus/system_bus_socket[0m
+/usr/lib/systemd/system/nscd.socket is calling this [1;31mwritable listener: /var/run/nscd/socket[0m
+
+[1;34m╔══════════╣ [1;32mUnix Sockets Listening
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#sockets
+[0m[1;31m/opt/alt/clos_ssa/run/ssa.sock[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/alt/php-xray/run/xray.sock[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/alt/php-xray/run/xray-user.sock[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/clwpos/wpos_redis_daemon.sock[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.2rBwGMy/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.2rBwGMy/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.2rBwGMy/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.BqoNxrg/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.BqoNxrg/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.BqoNxrg/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.fVdNWb6/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.fVdNWb6/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.fVdNWb6/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.hOSeoGB/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.hOSeoGB/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.hOSeoGB/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Ht7GB4U/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Ht7GB4U/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Ht7GB4U/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.ihbTgs7/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.ihbTgs7/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.ihbTgs7/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lccvA5F/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lccvA5F/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lccvA5F/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lm3irJe/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lm3irJe/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lm3irJe/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.MdpAX6r/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.MdpAX6r/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.MdpAX6r/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Qzrktw9/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Qzrktw9/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Qzrktw9/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.r9RykQB/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.r9RykQB/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.r9RykQB/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.WG7FYKR/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.WG7FYKR/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.WG7FYKR/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.yXkLRLi/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.yXkLRLi/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.yXkLRLi/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.z8Pldth/agents.s/core[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.z8Pldth/agents.s/core_api[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.z8Pldth/agents.s/watchdog_api[0m
+  └─([1;31mRead Write[0m)
+[1;32m/opt/i360_pam_imunify/pam_imunify360.sock[0m
+[1;32m/opt/imunify360/lib/event.sock[0m
+[1;31m/opt/imunify360/lib/proactive_mon.sock[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/imunify360/lib/proactive.sock[0m
+  └─([1;31mRead Write[0m)
+[1;31m/opt/imunify360/lib/stat.sock[0m
+  └─([1;31mRead Write[0m)
+[1;31m/run/dbus/system_bus_socket[0m
+  └─([1;31mRead Write[0m)
+[1;31m/run/nscd/socket[0m
+  └─([1;31mRead Write[0m)
+[1;31m/run/systemd/journal/dev-log.cagefs/dev-log[0m
+  └─([1;31mRead Write[0m)
+[1;31m/var/lib/proxyexec/cagefs.sock/socket[0m
+  └─([1;31mRead Write[0m)
+
+[1;34m╔══════════╣ [1;32mD-Bus Service Objects list
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#d-bus
+[0m[1;90mbusctl Not Found
+[0m[1;34m╔══════════╣ [1;32mD-Bus config files
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#d-bus
+[0m
+
+
+[1;34m                              ╔═════════════════════╗
+══════════════════════════════╣ [1;32mNetwork Information[1;34m ╠══════════════════════════════
+[1;34m                              ╚═════════════════════╝[0m
+[1;34m╔══════════╣ [1;32mInterfaces
+[0m1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: enp49s0f0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN group default qlen 1000
+    link/ether ac:1f:6b:b0:e2:24 brd ff:ff:ff:ff:ff:ff
+3: enp33s0f0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+    link/ether a0:36:9f:3b:1b:a8 brd ff:ff:ff:ff:ff:ff
+    inet 185.70.186.184/25 brd 185.70.186.255 scope global dynamic noprefixroute enp33s0f0
+       valid_lft 410695sec preferred_lft 410695sec
+    inet 185.70.186.193/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp1
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.190/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp2
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.189/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp3
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.140/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp4
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.230/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp5
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.229/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp6
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.228/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp7
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.195/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp8
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.186/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp9
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.185/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp10
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.183/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp11
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.145/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp12
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.146/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp13
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.147/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp14
+       valid_lft forever preferred_lft forever
+    inet 185.70.186.181/25 brd 185.70.186.255 scope global secondary enp33s0f0:cp15
+       valid_lft forever preferred_lft forever
+    inet6 fe80::1d0c:be38:928b:df8e/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+4: enp49s0f1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN group default qlen 1000
+    link/ether ac:1f:6b:b0:e2:25 brd ff:ff:ff:ff:ff:ff
+5: enp33s0f1: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN group default qlen 1000
+    link/ether a0:36:9f:3b:1b:aa brd ff:ff:ff:ff:ff:ff
+
+[1;34m╔══════════╣ [1;32mHostname, hosts and DNS
+[0m                 
+127.0.0.1        localhost
+		easyconfig.net
+		easyconfig.net
+		easyconfig.net
+185.70.186.184   host.netherlandsservers.org host host.kshitijno.netherlandsservers.org
+		easyconfig.net
+		easyconfig.net
+		easyconfig.net
+		easyconfig.net
+188.114.96.0     easyconfig.net data.easyconfig.net
+search netherlandsservers.org
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+[1;90mdnsdomainname Not Found
+[0m
+[1;34m╔══════════╣ [1;32mActive Ports
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#open-ports
+[0m
+[1;34m╔══════════╣ [1;32mCan I sniff with tcpdump?
+[0m[1;90mNo
+[0m
+
+
+[1;34m                               ╔═══════════════════╗
+═══════════════════════════════╣ [1;32mUsers Information[1;34m ╠═══════════════════════════════
+[1;34m                               ╚═══════════════════╝[0m
+[1;34m╔══════════╣ [1;32mMy user
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#users
+[0muid=2559([1;95m[1;34mminicraftvpsuk[0m[0m) gid=2564([1;95m[1;34mminicraftvpsuk[0m[0m) groups=2564([1;95m[1;34mminicraftvpsuk[0m[0m)
+
+[1;34m╔══════════╣ [1;32mDo I have PGP keys?
+[0m/usr/bin/gpg
+[1;90mnetpgpkeys Not Found
+[0m[1;90mnetpgp Not Found
+[0m
+[1;34m╔══════════╣ [1;32mChecking 'sudo -l', /etc/sudoers, and /etc/sudoers.d
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#sudo-and-suid
+[0m
+
+[1;34m╔══════════╣ [1;32mChecking sudo tokens
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#reusing-sudo-tokens
+[0mptrace protection [1;31mis disabled[0m (0), so sudo tokens could be abused
+
+[1;34m╔══════════╣ [1;32mChecking Pkexec policy
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/interesting-groups-linux-pe/index.html#pe---method-2
+[0m
+[1;34m╔══════════╣ [1;32mSuperusers
+[0m[1;31mroot[0m:x:0:0:root:/root:/bin/bash
+
+[1;34m╔══════════╣ [1;32mUsers with console
+[0m[1;96mpostgres[0m:x:26:26:PostgreSQL Server:/var/lib/pgsql:/bin/bash
+[1;31mroot[0m:x:0:0:root:/root:/bin/bash
+
+[1;34m╔══════════╣ [1;32mAll users & groups
+[0muid=0[1;31m([1;31mroot[0m)[0m gid=0[1;31m(root)[0m groups=0[1;31m(root)[0m
+uid=11([1;34moperator[0m) gid=0[1;31m([1;31mroot[0m)[0m groups=0[1;31m(root)[0m
+uid=12([1;34mgames[0m) gid=100(users) groups=100(users)
+uid=14([1;34mftp[0m) gid=50([1;34mftp[0m) groups=50([1;34mftp[0m)
+uid=1(bin) gid=1(bin) groups=1(bin)
+uid=2559([1;95m[1;34mminicraftvpsuk[0m[0m) gid=2564([1;95m[1;34mminicraftvpsuk[0m[0m) groups=2564([1;95m[1;34mminicraftvpsuk[0m[0m)
+uid=25([1;34mnamed[0m) gid=25([1;34mnamed[0m) groups=25([1;34mnamed[0m)
+uid=26([1;96mpostgres[0m) gid=26([1;96mpostgres[0m) groups=982(cpses),26([1;96mpostgres[0m)
+uid=27([1;34mmysql[0m) gid=27([1;34mmysql[0m) groups=27([1;34mmysql[0m)
+uid=28([1;34mnscd[0m) gid=28([1;34mnscd[0m) groups=28([1;34mnscd[0m)
+uid=29([1;34mrpcuser[0m) gid=29([1;34mrpcuser[0m) groups=29([1;34mrpcuser[0m)
+uid=2([1;34m[1;32mdaemon[0m[0m) gid=2([1;34m[1;32mdaemon[0m[0m) groups=2([1;34m[1;32mdaemon[0m[0m)
+uid=32([1;34mrpc[0m) gid=32([1;34mrpc[0m) groups=32([1;34mrpc[0m)
+uid=3[1;31m([1;34madm[0m)[0m gid=4[1;31m([1;34madm[0m)[0m groups=4[1;31m([1;34madm[0m)[0m
+uid=47([1;34m[1;32mmail[0mnull[0m) gid=47([1;34m[1;32mmail[0mnull[0m) groups=47([1;34m[1;32mmail[0mnull[0m)
+uid=4([1;34mlp[0m) gid=7([1;34mlp[0m) groups=7([1;34mlp[0m)
+uid=5([1;34msync[0m) gid=0[1;31m([1;31mroot[0m)[0m groups=0[1;31m(root)[0m
+uid=65534([1;34mnobody[0m) gid=65534([1;34mnobody[0m) groups=65534([1;34mnobody[0m)
+uid=6([1;34mshutdown[0m) gid=0[1;31m([1;31mroot[0m)[0m groups=0[1;31m(root)[0m
+uid=74([1;34msshd[0m) gid=74([1;34msshd[0m) groups=74([1;34msshd[0m)
+uid=7([1;34mhalt[0m) gid=0[1;31m([1;31mroot[0m)[0m groups=0[1;31m(root)[0m
+uid=81([1;34mdbus[0m) gid=81([1;34mdbus[0m) groups=81([1;34mdbus[0m)
+uid=8([1;34m[1;32mmail[0m[0m) gid=12([1;34m[1;32mmail[0m[0m) groups=12([1;34m[1;32mmail[0m[0m)
+uid=97([1;34mdovecot[0m) gid=97([1;34mdovecot[0m) groups=97([1;34mdovecot[0m)
+uid=990([1;34mcpaneleximfilter[0m) gid=987([1;34mcpaneleximfilter[0m) groups=987([1;34mcpaneleximfilter[0m)
+uid=994([1;34m[1;32mmail[0mman[0m) gid=991([1;34m[1;32mmail[0mman[0m) groups=991([1;34m[1;32mmail[0mman[0m),975(linksafe),1002(clsupergid)
+
+[1;34m╔══════════╣ [1;32mLogin now
+[0m
+[1;34m╔══════════╣ [1;32mLast logons
+[0m
+[1;34m╔══════════╣ [1;32mLast time logon each user
+[0m
+[1;34m╔══════════╣ [1;32mDo not forget to test 'su' as any other user with shell: without password and with their names as password (I don't do it in FAST mode...)
+[0m
+[0m[1;34m╔══════════╣ [1;32mDo not forget to execute 'sudo -l' without password or with valid password (if you know it)!!
+[0m
+[0m
+
+[1;34m                             ╔══════════════════════╗
+═════════════════════════════╣ [1;32mSoftware Information[1;34m ╠═════════════════════════════
+[1;34m                             ╚══════════════════════╝[0m
+[1;34m╔══════════╣ [1;32mUseful software
+[0m/usr/bin/base64
+/usr/bin/curl
+/usr/bin/make
+/usr/bin/perl
+/usr/bin/php
+/usr/bin/ping
+/usr/bin/python2
+/usr/bin/python2.7
+/usr/bin/python3
+/usr/bin/python3.6
+/usr/bin/wget
+
+[1;34m╔══════════╣ [1;32mInstalled Compilers
+[0m
+[1;34m╔══════════╣ [1;32mAnalyzing Apache-Nginx Files (limit 70)
+[0mApache version: [1;90mapache2 Not Found
+[0m[1;90mhttpd Not Found
+[0m
+Nginx version: [1;90mnginx Not Found
+[0m
+[1;34m══╣ [1;32mPHP exec extensions
+[0m
+
+lrwxrwxrwx 1 root root 26 Jan 30 06:14 /etc/cl.selector/php.ini -> /opt/alt/php81/etc/[1;31mphp.ini[0m
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 46058 Mar 21 03:37 /opt/alt/php53/etc/[1;31mphp.ini[0m
+allow_call_time_pass_reference = Off
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysql.allow_persistent = [1;31mOn[0m
+msql.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+sybase.allow_persistent = [1;31mOn[0m
+sybct.allow_persistent = [1;31mOn[0m
+ifx.allow_persistent = [1;31mOn[0m
+mssql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 46430 Mar 21 03:37 /opt/alt/php54/etc/[1;31mphp.ini[0m
+allow_call_time_pass_reference = Off
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysql.allow_persistent = [1;31mOn[0m
+msql.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+sybase.allow_persistent = [1;31mOn[0m
+sybct.allow_persistent = [1;31mOn[0m
+ifx.allow_persistent = [1;31mOn[0m
+mssql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 46058 Mar 21 03:37 /opt/alt/php55/etc/[1;31mphp.ini[0m
+allow_call_time_pass_reference = Off
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysql.allow_persistent = [1;31mOn[0m
+msql.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+sybase.allow_persistent = [1;31mOn[0m
+sybct.allow_persistent = [1;31mOn[0m
+ifx.allow_persistent = [1;31mOn[0m
+mssql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 46058 Mar 21 03:37 /opt/alt/php56/etc/[1;31mphp.ini[0m
+allow_call_time_pass_reference = Off
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysql.allow_persistent = [1;31mOn[0m
+msql.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+sybase.allow_persistent = [1;31mOn[0m
+sybct.allow_persistent = [1;31mOn[0m
+ifx.allow_persistent = [1;31mOn[0m
+mssql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 43801 Mar 21 03:37 /opt/alt/php70/etc/[1;31mphp.ini[0m
+allow_call_time_pass_reference = Off
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysql.allow_persistent = [1;31mOn[0m
+msql.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+ifx.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 41201 Mar 21 03:37 /opt/alt/php73/etc/[1;31mphp.ini[0m
+allow_call_time_pass_reference = Off
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysql.allow_persistent = [1;31mOn[0m
+msql.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 41201 Mar 21 03:37 /opt/alt/php74/etc/[1;31mphp.ini[0m
+allow_call_time_pass_reference = Off
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysql.allow_persistent = [1;31mOn[0m
+msql.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 62121 Mar 21 03:37 /opt/alt/php80/etc/[1;31mphp.ini[0m
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 62481 Mar 21 03:37 /opt/alt/php81/etc/[1;31mphp.ini[0m
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 62586 Mar 21 03:37 /opt/alt/php82/etc/[1;31mphp.ini[0m
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root linksafe 62586 Mar 21 03:37 /opt/alt/php83/etc/[1;31mphp.ini[0m
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root root 61033 Jan 30 11:07 /opt/cpanel/ea-php73/root/etc/[1;31mphp.ini[0m
+allow_url_fopen = Off
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+ibase.allow_persistent = 1
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root root 61032 Jan 30 11:07 /opt/cpanel/ea-php74/root/etc/[1;31mphp.ini[0m
+allow_url_fopen = Off
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+ibase.allow_persistent = 1
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+lrwxrwxrwx 1 root root 27 Mar 21 03:37 /opt/cpanel/ea-php81/root/etc/php.ini -> /etc/cl.selector/ea-[1;31mphp.ini[0m
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root root 61043 Jan 15 14:22 /opt/cpanel/ea-php82/root/etc/[1;31mphp.ini[0m
+allow_url_fopen = [1;31mOn[0m
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+ibase.allow_persistent = 1
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root root 61032 Jan 30 11:08 /opt/cpanel/ea-php83/root/etc/[1;31mphp.ini[0m
+allow_url_fopen = Off
+allow_url_include = Off
+odbc.allow_persistent = [1;31mOn[0m
+ibase.allow_persistent = 1
+mysqli.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root root 39852 Apr 18  2024 /usr/local/lsws/add-ons/directadmin/[1;31mphp.ini[0m
+allow_call_time_pass_reference = [1;31mOn[0m
+allow_url_fopen = [1;31mOn[0m
+odbc.allow_persistent = [1;31mOn[0m
+mysql.allow_persistent = [1;31mOn[0m
+msql.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+sybase.allow_persistent = [1;31mOn[0m
+sybct.allow_persistent = [1;31mOn[0m
+ifx.allow_persistent = [1;31mOn[0m
+mssql.allow_persistent = [1;31mOn[0m
+ingres.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root root 37999 Apr 18  2024 /usr/local/lsws/admin/misc/[1;31mphp.ini[0m
+allow_call_time_pass_reference = Off
+allow_url_fopen = [1;31mOn[0m
+odbc.allow_persistent = [1;31mOn[0m
+mysql.allow_persistent = [1;31mOn[0m
+msql.allow_persistent = [1;31mOn[0m
+pgsql.allow_persistent = [1;31mOn[0m
+sybase.allow_persistent = [1;31mOn[0m
+sybct.allow_persistent = [1;31mOn[0m
+ifx.allow_persistent = [1;31mOn[0m
+mssql.allow_persistent = [1;31mOn[0m
+ingres.allow_persistent = [1;31mOn[0m
+-rw-r--r-- 1 root root 0 Mar  5  2024 /usr/selector.etc/[1;31mphp.ini[0m
+
+-rw-r--r-- 1 root root 717 Jul 24  2024 /opt/cpanel/ea-ruby27/src/passenger-release-6.0.23/dev/vagrant/[1;31mnginx.conf[0m
+[1;31m[0md[1;31m[0ma[1;31m[0me[1;31m[0mm[1;31m[0mo[1;31m[0mn[1;31m[0m [1;31m[0mo[1;31m[0mf[1;31m[0mf[1;31m[0m;[1;31m[0m
+[1;31m[0mw[1;31m[0mo[1;31m[0mr[1;31m[0mk[1;31m[0me[1;31m[0mr[1;31m[0m_[1;31m[0mp[1;31m[0mr[1;31m[0mo[1;31m[0mc[1;31m[0me[1;31m[0ms[1;31m[0ms[1;31m[0me[1;31m[0ms[1;31m[0m [1;31m[0m [1;31m[0m1[1;31m[0m;[1;31m[0m
+[1;31m[0me[1;31m[0mv[1;31m[0me[1;31m[0mn[1;31m[0mt[1;31m[0ms[1;31m[0m [1;31m[0m{[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mw[1;31m[0mo[1;31m[0mr[1;31m[0mk[1;31m[0me[1;31m[0mr[1;31m[0m_[1;31m[0mc[1;31m[0mo[1;31m[0mn[1;31m[0mn[1;31m[0me[1;31m[0mc[1;31m[0mt[1;31m[0mi[1;31m[0mo[1;31m[0mn[1;31m[0ms[1;31m[0m [1;31m[0m [1;31m[0m1[1;31m[0m0[1;31m[0m2[1;31m[0m4[1;31m[0m;[1;31m[0m
+[1;31m[0m}[1;31m[0m
+[1;31m[0mh[1;31m[0mt[1;31m[0mt[1;31m[0mp[1;31m[0m [1;31m[0m{[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mi[1;31m[0mn[1;31m[0mc[1;31m[0ml[1;31m[0mu[1;31m[0md[1;31m[0me[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mm[1;31m[0mi[1;31m[0mm[1;31m[0me[1;31m[0m.[1;31m[0mt[1;31m[0my[1;31m[0mp[1;31m[0me[1;31m[0ms[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0md[1;31m[0me[1;31m[0mf[1;31m[0ma[1;31m[0mu[1;31m[0ml[1;31m[0mt[1;31m[0m_[1;31m[0mt[1;31m[0my[1;31m[0mp[1;31m[0me[1;31m[0m [1;31m[0m [1;31m[0ma[1;31m[0mp[1;31m[0mp[1;31m[0ml[1;31m[0mi[1;31m[0mc[1;31m[0ma[1;31m[0mt[1;31m[0mi[1;31m[0mo[1;31m[0mn[1;31m[0m/[1;31m[0mo[1;31m[0mc[1;31m[0mt[1;31m[0me[1;31m[0mt[1;31m[0m-[1;31m[0ms[1;31m[0mt[1;31m[0mr[1;31m[0me[1;31m[0ma[1;31m[0mm[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0ms[1;31m[0me[1;31m[0mn[1;31m[0md[1;31m[0mf[1;31m[0mi[1;31m[0ml[1;31m[0me[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mo[1;31m[0mn[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mk[1;31m[0me[1;31m[0me[1;31m[0mp[1;31m[0ma[1;31m[0ml[1;31m[0mi[1;31m[0mv[1;31m[0me[1;31m[0m_[1;31m[0mt[1;31m[0mi[1;31m[0mm[1;31m[0me[1;31m[0mo[1;31m[0mu[1;31m[0mt[1;31m[0m [1;31m[0m [1;31m[0m6[1;31m[0m5[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mp[1;31m[0ma[1;31m[0ms[1;31m[0ms[1;31m[0me[1;31m[0mn[1;31m[0mg[1;31m[0me[1;31m[0mr[1;31m[0m_[1;31m[0mr[1;31m[0mo[1;31m[0mo[1;31m[0mt[1;31m[0m [1;31m[0m/[1;31m[0mv[1;31m[0ma[1;31m[0mg[1;31m[0mr[1;31m[0ma[1;31m[0mn[1;31m[0mt[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mp[1;31m[0ma[1;31m[0ms[1;31m[0ms[1;31m[0me[1;31m[0mn[1;31m[0mg[1;31m[0me[1;31m[0mr[1;31m[0m_[1;31m[0mr[1;31m[0mu[1;31m[0mb[1;31m[0my[1;31m[0m [1;31m[0m/[1;31m[0mu[1;31m[0ms[1;31m[0mr[1;31m[0m/[1;31m[0mb[1;31m[0mi[1;31m[0mn[1;31m[0m/[1;31m[0mr[1;31m[0mu[1;31m[0mb[1;31m[0my[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mp[1;31m[0ma[1;31m[0ms[1;31m[0ms[1;31m[0me[1;31m[0mn[1;31m[0mg[1;31m[0me[1;31m[0mr[1;31m[0m_[1;31m[0ml[1;31m[0mo[1;31m[0mg[1;31m[0m_[1;31m[0ml[1;31m[0me[1;31m[0mv[1;31m[0me[1;31m[0ml[1;31m[0m [1;31m[0m1[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0ms[1;31m[0me[1;31m[0mr[1;31m[0mv[1;31m[0me[1;31m[0mr[1;31m[0m [1;31m[0m{[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0ml[1;31m[0mi[1;31m[0ms[1;31m[0mt[1;31m[0me[1;31m[0mn[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m8[1;31m[0m1[1;31m[0m0[1;31m[0m0[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0ms[1;31m[0me[1;31m[0mr[1;31m[0mv[1;31m[0me[1;31m[0mr[1;31m[0m_[1;31m[0mn[1;31m[0ma[1;31m[0mm[1;31m[0me[1;31m[0m [1;31m[0m [1;31m[0ml[1;31m[0mo[1;31m[0mc[1;31m[0ma[1;31m[0ml[1;31m[0mh[1;31m[0mo[1;31m[0ms[1;31m[0mt[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0ml[1;31m[0mo[1;31m[0mc[1;31m[0ma[1;31m[0mt[1;31m[0mi[1;31m[0mo[1;31m[0mn[1;31m[0m [1;31m[0m/[1;31m[0m [1;31m[0m{[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mr[1;31m[0mo[1;31m[0mo[1;31m[0mt[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mh[1;31m[0mt[1;31m[0mm[1;31m[0ml[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mi[1;31m[0mn[1;31m[0md[1;31m[0me[1;31m[0mx[1;31m[0m [1;31m[0m [1;31m[0mi[1;31m[0mn[1;31m[0md[1;31m[0me[1;31m[0mx[1;31m[0m.[1;31m[0mh[1;31m[0mt[1;31m[0mm[1;31m[0ml[1;31m[0m [1;31m[0mi[1;31m[0mn[1;31m[0md[1;31m[0me[1;31m[0mx[1;31m[0m.[1;31m[0mh[1;31m[0mt[1;31m[0mm[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m}[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m}[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0ms[1;31m[0me[1;31m[0mr[1;31m[0mv[1;31m[0me[1;31m[0mr[1;31m[0m [1;31m[0m{[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0ml[1;31m[0mi[1;31m[0ms[1;31m[0mt[1;31m[0me[1;31m[0mn[1;31m[0m [1;31m[0m8[1;31m[0m1[1;31m[0m0[1;31m[0m1[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0ms[1;31m[0me[1;31m[0mr[1;31m[0mv[1;31m[0me[1;31m[0mr[1;31m[0m_[1;31m[0mn[1;31m[0ma[1;31m[0mm[1;31m[0me[1;31m[0m [1;31m[0mr[1;31m[0ma[1;31m[0mc[1;31m[0mk[1;31m[0m.[1;31m[0mt[1;31m[0me[1;31m[0ms[1;31m[0mt[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mr[1;31m[0mo[1;31m[0mo[1;31m[0mt[1;31m[0m [1;31m[0m/[1;31m[0mv[1;31m[0ma[1;31m[0mg[1;31m[0mr[1;31m[0ma[1;31m[0mn[1;31m[0mt[1;31m[0m/[1;31m[0md[1;31m[0me[1;31m[0mv[1;31m[0m/[1;31m[0mr[1;31m[0ma[1;31m[0mc[1;31m[0mk[1;31m[0m.[1;31m[0mt[1;31m[0me[1;31m[0ms[1;31m[0mt[1;31m[0m/[1;31m[0mp[1;31m[0mu[1;31m[0mb[1;31m[0ml[1;31m[0mi[1;31m[0mc[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0mp[1;31m[0ma[1;31m[0ms[1;31m[0ms[1;31m[0me[1;31m[0mn[1;31m[0mg[1;31m[0me[1;31m[0mr[1;31m[0m_[1;31m[0me[1;31m[0mn[1;31m[0ma[1;31m[0mb[1;31m[0ml[1;31m[0me[1;31m[0md[1;31m[0m [1;31m[0mo[1;31m[0mn[1;31m[0m;[1;31m[0m
+[1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m [1;31m[0m}[1;31m[0m
+[1;31m[0m}[1;31m[0m
+
+drwxr-xr-x 2 root root 4096 Dec 30 07:47 /opt/cpanel/ea-ruby27/root/usr/share/passenger/phusion_passenger/[1;31mnginx[0m
+
+drwxr-xr-x 2 root root 4096 Dec 30 07:47 /opt/cpanel/ea-ruby27/root/usr/share/passenger/templates/[1;31mnginx[0m
+
+drwxr-xr-x 2 root root 4096 Dec 30 07:47 /opt/cpanel/ea-ruby27/src/passenger-release-6.0.23/dev/ci/tests/[1;31mnginx[0m
+
+drwxr-xr-x 2 root root 4096 Dec 30 07:47 /opt/cpanel/ea-ruby27/src/passenger-release-6.0.23/resources/templates/[1;31mnginx[0m
+
+drwxr-xr-x 2 root root 4096 Dec 30 07:47 /opt/cpanel/ea-ruby27/src/passenger-release-6.0.23/src/ruby_supportlib/phusion_passenger/[1;31mnginx[0m
+
+drwxr-xr-x 2 root root 4096 Dec 30 07:47 /opt/cpanel/ea-ruby27/src/passenger-release-6.0.23/test/stub/[1;31mnginx[0m
+
+drwxr-xr-x 4 root root 4096 Feb 26 12:21 /opt/imunify360-webshield/[1;31mnginx[0m
+
+
+[1;34m╔══════════╣ [1;32mAnalyzing PAM Auth Files (limit 70)
+[0mdrwxr-xr-x 2 root root 4096 Mar 21 09:57 /etc/[1;31mpam.d[0m
+
+
+[1;34m╔══════════╣ [1;32mAnalyzing VNC Files (limit 70)
+[0m
+
+
+
+-rw-r--r-- 1 root root 475 Sep 21  2023 /usr/lib/firewalld/services/[1;31mvnc-server.xml[0m
+[1;31m<?xml version="1.0" encoding="utf-8"?>[0m
+[1;31m<service>[0m
+[1;31m  <short>Virtual Network Computing Server (VNC)</short>[0m
+[1;31m  <description>A VNC server provides an external accessible X session. Enable this option if you plan to provide a VNC server with direct access. The access will be possible for displays :0 to :3. If you plan to provide access with SSH, do not open this option and use the via option of the VNC viewer.</description>[0m
+[1;31m  <port protocol="tcp" port="5900-5903"/>[0m
+[1;31m</service>[0m
+
+[1;34m╔══════════╣ [1;32mAnalyzing Redis Files (limit 70)
+[0m[1;90mredis-server Not Found
+[0mlrwxrwxrwx 1 root root 16 Mar 29  2024 /opt/alt/redis/etc/redis.conf -> redis/[1;31mredis.conf[0m
+
+[1;34m╔══════════╣ [1;32mAnalyzing Cache Vi Files (limit 70)
+[0m-rw-r--r-- 1 root root 12288 Mar 29  2024 /opt/alt/alt-php-config/.alt-php.cfg[1;31m.swp[0m
+
+
+[1;34m╔══════════╣ [1;32mAnalyzing SNMP Files (limit 70)
+[0m-rw------- 1 root root 18861 Oct 14  2023 /etc/snmp/[1;31msnmpd.conf[0m
+
+[1;34m╔══════════╣ [1;32mAnalyzing Http conf Files (limit 70)
+[0m-rw-r--r-- 1 root root 0 Apr 18  2024 /usr/local/lsws/add-ons/frontpage/conf/[1;31mhttpd.conf[0m
+
+[1;34m╔══════════╣ [1;32mAnalyzing Github Files (limit 70)
+[0mdrwxr-xr-x 3 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs10/root/usr/lib/node_modules/npm/node_modules.bundled/meant/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs10/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs10/root/usr/lib/node_modules/npm/node_modules.bundled/npm-normalize-package-bin/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/meant/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/npm-normalize-package-bin/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs14/root/usr/lib/node_modules/npm/node_modules.bundled/meant/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs14/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs14/root/usr/lib/node_modules/npm/node_modules.bundled/npm-normalize-package-bin/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar  5  2024 /opt/alt/alt-nodejs16/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar  5  2024 /opt/alt/alt-nodejs16/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/gyp/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar  5  2024 /opt/alt/alt-nodejs18/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar  5  2024 /opt/alt/alt-nodejs18/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/gyp/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs19/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs19/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/gyp/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs6/root/usr/lib/node_modules/npm/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs8/root/usr/lib/node_modules/npm/node_modules.bundled/node-gyp/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs8/root/usr/lib/node_modules/npm/node_modules.bundled/npm-normalize-package-bin/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Mar 12  2024 /opt/alt/alt-nodejs9/root/usr/lib/node_modules/npm/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Dec 30 07:47 /opt/cpanel/ea-ruby27/src/passenger-release-6.0.23/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar 12  2024 /usr/lib/node_modules/npm/node_modules/meant/[1;31m.github[0m
+drwxr-xr-x 3 root root 4096 Mar 12  2024 /usr/lib/node_modules/npm/node_modules/node-gyp/[1;31m.github[0m
+drwxr-xr-x 2 root root 4096 Mar 12  2024 /usr/lib/node_modules/npm/node_modules/npm-normalize-package-bin/[1;31m.github[0m
+
+
+
+drwxr-xr-x 7 root root 4096 Dec 30 07:47 /opt/cpanel/ea-ruby27/src/passenger-release-6.0.23/build/support/vendor/cxxcodebuilder/[1;31m.git[0m
+
+[1;34m╔══════════╣ [1;32mAnalyzing DNS Files (limit 70)
+[0mdrwxr-xr-x. 2 root root 4096 Apr 11  2024 /usr/lib64/[1;31mbind[0m
+[1;31mdrwxr-xr-x. 2 root root 4096 Apr 11  2024 /usr/lib64/bind[0m
+
+
+
+
+[1;34m╔══════════╣ [1;32mAnalyzing Sentry Files (limit 70)
+[0m-rw-r--r-- 1 root root 81 Feb 24 15:41 /opt/imunify360/venv/share/imunify360/[1;31msentry[0m
+
+
+
+[1;34m╔══════════╣ [1;32mAnalyzing Interesting logs Files (limit 70)
+[0m
+-rw------- 1 root root 0 Apr  7  2024 /opt/cpanel/ea-php81/root/usr/var/log/php-fpm/[1;31merror.log[0m
+
+[1;34m╔══════════╣ [1;32mAnalyzing Other Interesting Files (limit 70)
+[0m-rw-r--r-- 1 root root 376 Aug  3  2022 /etc/skel/[1;31m.bashrc[0m
+
+
+
+
+
+
+
+
+
+[1;34m╔══════════╣ [1;32mAnalyzing Windows Files (limit 70)
+[0m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-rw-r--r-- 1 root root 364 Mar 19 00:25 /etc/[1;31mmy.cnf[0m
+
+
+
+
+
+
+
+
+
+-rw-r--r-- 1 root root 475 Sep 21  2023 /usr/lib/firewalld/services/vnc-[1;31mserver.xml[0m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;34m╔══════════╣ [1;32mSearching kerberos conf files and tickets
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/linux-active-directory.html#linux-active-directory
+[0mptrace protection [1;31mis disabled[0m (0), you might find tickets inside processes memory
+-rw-r--r--. 1 root root 812 Nov  6  2023 /opt/alt/krb5/usr/etc/krb5.conf
+# To opt out of the system crypto-policies configuration of krb5, remove the
+# symlink at /etc/krb5.conf.d/crypto-policies which will not be recreated.
+includedir /etc/krb5.conf.d/
+
+[logging]
+    default = FILE:/var/log/krb5libs.log
+    kdc = FILE:/var/log/krb5kdc.log
+    admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+    dns_lookup_realm = false
+    ticket_lifetime = 24h
+    renew_lifetime = 7d
+    forwardable = true
+    rdns = false
+    pkinit_anchors = FILE:/etc/pki/tls/certs/ca-bundle.crt
+    spake_preauth_groups = edwards25519
+#    default_realm = EXAMPLE.COM
+    [1;31mdefault_ccache_name[0m = KEYRING:persistent:%{uid}
+
+[realms]
+# EXAMPLE.COM = {
+#     kdc = kerberos.example.com
+#     admin_server = kerberos.example.com
+# }
+
+[domain_realm]
+# .example.com = EXAMPLE.COM
+# example.com = EXAMPLE.COM
+-rw-r--r-- 1 root root 212 Feb 21  2024 /usr/lib64/sssd/conf/sssd.conf
+[sssd]
+services = nss, pam
+domains = shadowutils
+
+[nss]
+
+[pam]
+
+[domain/shadowutils]
+id_provider = proxy
+proxy_lib_name = files
+
+auth_provider = proxy
+proxy_pam_target = sssd-shadowutils
+
+proxy_fast_alias = True
+[1;90mtickets kerberos Not Found
+[0m[1;90mklist Not Found
+[0m
+
+[1;34m╔══════════╣ [1;32mSearching mysql credentials and exec
+[0m
+[1;34m╔══════════╣ [1;32mMySQL version
+[0mmysql  Ver 8.0.37 for Linux on x86_64 (MySQL Community Server - GPL)
+
+
+[1;34m═╣ [1;32mMySQL connection using default root/root ........... [0m[1;90mNo
+[0m[1;34m═╣ [1;32mMySQL connection using root/toor ................... [0m[1;90mNo
+[0m[1;34m═╣ [1;32mMySQL connection using root/NOPASS ................. [0m[1;90mNo
+[0m
+[1;34m╔══════════╣ [1;32mAnalyzing PGP-GPG Files (limit 70)
+[0m/usr/bin/gpg
+[1;90mnetpgpkeys Not Found
+[0m[1;90mnetpgp Not Found
+[0m
+-rw-------. 1 root root 1200 Mar  5  2024 /etc/mail/spamassassin/sa-update-keys/trustdb[1;31m.gpg[0m
+-rw-r--r-- 1 root root 3290 Jan  1  2020 /usr/share/gnupg/distsigkey[1;31m.gpg[0m
+
+
+[1;34m╔══════════╣ [1;32mSearching uncommon passwd files (splunk)
+[0mpasswd file: [1;31m/etc/passwd[0m
+
+[1;34m╔══════════╣ [1;32mSearching ssl/ssh files
+[0m[1;34m══╣ [1;32mSome certificates were found (out limited):
+[0m/etc/pki/fwupd/LVFS-CA.pem
+/etc/pki/fwupd-metadata/LVFS-CA.pem
+/etc/pki/tls/certs/185-70-186-187.cprapid.com.crt
+/etc/pki/tls/certs/host.kshitijno.netherlandsservers.org.crt
+/etc/pki/tls/certs/host.netherlandsservers.org.crt
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/badcert.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/badkey.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/https_svn_python_org_root.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/keycert2.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/keycert.passwd.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/keycert.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/nullcert.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/sha256.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/ssl_cert.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/ssl_key.passwd.pem
+/opt/alt/python37/lib/python3.7/site-packages/future/backports/test/ssl_key.pem
+/opt/cloudlinux/venv/lib/python3.11/site-packages/future/backports/test/badcert.pem
+/opt/cloudlinux/venv/lib/python3.11/site-packages/future/backports/test/badkey.pem
+/opt/cloudlinux/venv/lib/python3.11/site-packages/future/backports/test/https_svn_python_org_root.pem
+/opt/cloudlinux/venv/lib/python3.11/site-packages/future/backports/test/keycert2.pem
+2359873PSTORAGE_CERTSBIN
+
+[1;34m══╣ [1;32mSome client certificates were found:
+[0m/opt/cpanel/ea-ruby27/src/passenger-release-6.0.23/resources/update_check_client_cert.p12
+
+
+Searching inside /etc/ssh/ssh_config for interesting info
+Include /etc/ssh/ssh_config.d/*.conf
+
+
+
+
+[1;34m                      ╔════════════════════════════════════╗
+══════════════════════╣ [1;32mFiles with Interesting Permissions[1;34m ╠══════════════════════
+[1;34m                      ╚════════════════════════════════════╝[0m
+[1;34m╔══════════╣ [1;32mSUID - Check easy privesc, exploits and write perms
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#sudo-and-suid
+[0m-rwsr-xr-x 1 root root 59K Oct  8  2021 [1;31m/lib64/libkeyutils.so.1.6.2 (Unknown SUID binary!)[0m
+[3m-rwsr-xr-x 1 root root 59K Oct  8  2021 [1;31m/usr/lib64/libkeyutils.so.1.6.2 (Unknown SUID binary!)[0m
+[3m-r-sr-xr-x 1 root root 67K Apr 18  2024 [1;31m/usr/local/lsws/bin/lscgid.6.1.2 (Unknown SUID binary!)[0m
+[3m
+[1;34m╔══════════╣ [1;32mSGID
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#sudo-and-suid
+[0m (Unknown SGID binary)
+[3m
+[1;34m╔══════════╣ [1;32mFiles with ACLs (limited to 50)
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#acls
+[0m[1;90mfiles with acls in searched folders Not Found
+[0m
+[1;34m╔══════════╣ [1;32mCapabilities
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#capabilities
+[0m[1;34m══╣ [1;32mCurrent shell capabilities
+[0m[1;32mCapInh:	0000000000000000[0m
+[1;32mCapPrm:	0000000000000000[0m
+[1;32mCapEff:	0000000000000000[0m
+CapBnd:	000001ffffffffff
+[1;32mCapAmb:	0000000000000000[0m
+
+[1;34m══╣ [1;32mParent proc capabilities
+[0m[1;32mCapInh:	0000000000000000[0m
+[1;32mCapPrm:	0000000000000000[0m
+[1;32mCapEff:	0000000000000000[0m
+CapBnd:	000001ffffffffff
+[1;32mCapAmb:	0000000000000000[0m
+
+
+Files with capabilities (limited to 50):
+
+[1;34m╔══════════╣ [1;32mChecking misconfigurations of ld.so
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#ldso
+[0m[1;32m[3m/etc/ld.so.conf
+[0mContent of /etc/ld.so.conf:
+include ld.so.conf.d/*.conf
+[1;32m[3mld.so.conf.d
+[0m[1;32m[3m  ld.so.conf.d/*
+[0m
+[3m[1;32m/etc/ld.so.preload
+[0m[1;34m╔══════════╣ [1;32mFiles (scripts) in /etc/profile.d/
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#profiles-files
+[0mtotal 132
+drwxr-xr-x  2 root root 4096 Mar 21 09:57 .
+drwxr-xr-x 32 root root 4096 Mar 21 09:57 ..
+-rw-r--r--  1 root root  664 Oct 12  2019 [1;32mbash_completion.sh[0m
+-rw-r--r--  1 root root   69 Mar  5  2024 bash_timestamps.sh
+-rw-r--r--  1 root root  196 Aug 12  2018 [1;32mcolorgrep.csh[0m
+-rw-r--r--  1 root root  201 Aug 12  2018 [1;32mcolorgrep.sh[0m
+-rw-r--r--  1 root root 1741 Apr  1  2023 [1;32mcolorls.csh[0m
+-rw-r--r--  1 root root 1606 Apr  1  2023 [1;32mcolorls.sh[0m
+-rw-r--r--  1 root root   69 Oct 15  2023 colorsysstat.csh
+-rw-r--r--  1 root root   56 Oct 15  2023 colorsysstat.sh
+-rw-r--r--  1 root root  162 Jun 14  2022 [1;32mcolorxzgrep.csh[0m
+-rw-r--r--  1 root root  183 Jun 14  2022 [1;32mcolorxzgrep.sh[0m
+-rw-r--r--  1 root root  216 Apr 20  2022 [1;32mcolorzgrep.csh[0m
+-rw-r--r--  1 root root  220 Apr 20  2022 [1;32mcolorzgrep.sh[0m
+-rwxr-xr-x  1 root root  548 Nov  3  2023 cpanel-php-composer.sh
+-rw-r--r--  1 root root  513 Mar  5  2024 cpanel-user-commands.sh
+-rw-r--r--  1 root root   80 May 15  2023 [1;32mcsh.local[0m
+-rw-r--r--  1 root root  674 Oct 14  2023 debuginfod.csh
+-rw-r--r--  1 root root  596 Oct 14  2023 debuginfod.sh
+-rw-r--r--  1 root root 1107 Dec 14  2017 [1;32mgawk.csh[0m
+-rw-r--r--  1 root root  757 Dec 14  2017 [1;32mgawk.sh[0m
+-rw-r--r--  1 root root 2489 May 15  2023 [1;32mlang.csh[0m
+-rw-r--r--  1 root root 2312 May 15  2023 [1;32mlang.sh[0m
+-rw-r--r--  1 root root  500 Apr  2  2024 [1;32mless.csh[0m
+-rw-r--r--  1 root root  253 Apr  2  2024 [1;32mless.sh[0m
+-rwxr-xr-x  1 root root  240 Mar  5  2024 locallib.csh
+-rwxr-xr-x  1 root root  288 Mar  5  2024 locallib.sh
+lrwxrwxrwx  1 root root   29 Mar 21 09:57 modules.csh -> /etc/alternatives/modules.csh
+lrwxrwxrwx  1 root root   28 Mar 21 09:57 modules.sh -> /etc/alternatives/modules.sh
+-rw-r--r--  1 root root  284 Aug 25  2017 scl-init.csh
+-rw-r--r--  1 root root  637 Aug 25  2017 scl-init.sh
+-rw-r--r--  1 root root   81 May 15  2023 [1;32msh.local[0m
+-rw-r--r--  1 root root  849 Nov 20 15:31 snapd.sh
+-rw-r--r--  1 root root  120 Oct 15  2023 [1;32mwhich2.csh[0m
+-rw-r--r--  1 root root  540 Oct 15  2023 [1;32mwhich2.sh[0m
+
+[1;34m╔══════════╣ [1;32mPermissions in init, init.d, systemd, and rc.d
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#init-initd-systemd-and-rcd
+[0m
+[1;34m═╣ [1;32mHashes inside passwd file? ........... [0m[1;90mNo
+[0m[1;34m═╣ [1;32mWritable passwd file? ................ [0m[1;90mNo
+[0m[1;34m═╣ [1;32mCredentials in fstab/mtab? ........... [0m[1;90mNo
+[0m[1;34m═╣ [1;32mCan I read shadow files? ............. [0m[1;90mNo
+[0m[1;34m═╣ [1;32mCan I read shadow plists? ............ [0m[1;90mNo
+[0m[1;34m═╣ [1;32mCan I write shadow plists? ........... [0m[1;90mNo
+[0m[1;34m═╣ [1;32mCan I read opasswd file? ............. [0m[1;90mNo
+[0m[1;34m═╣ [1;32mCan I write in network-scripts? ...... [0m[1;90mNo
+[0m[1;34m═╣ [1;32mCan I read root folder? .............. [0m[1;90mNo
+[0m
+[1;34m╔══════════╣ [1;32mSearching root files in home dirs (limit 30)
+[0m/home/
+/root/
+/var/www
+/var/www/cgi-bin
+/var/www/html
+/var/www/html/401.shtml
+/var/www/html/.well-known
+/var/www/html/.well-known/acme-challenge
+/var/www/html/400.shtml
+/var/www/html/404.shtml
+/var/www/html/cp_errordocument.shtml
+/var/www/html/index.html
+/var/www/html/500.shtml
+/var/www/html/413.shtml
+/var/www/html/403.shtml
+
+[1;34m╔══════════╣ [1;32mSearching folders owned by me containing others files on it (limit 100)
+[0mtotal 0
+
+[1;34m╔══════════╣ [1;32mReadable files belonging to root and readable by me but not world readable
+[0m-rw-r----- 1 root minicraftvpsuk 499 Jan 30 06:14 [1;31m/var/clwpos/uids/2559/suites_allowed.json[0m
+-rw-r----- 1 root minicraftvpsuk 2088 Mar 21 00:00 [1;31m/var/clwpos/uids/2559/info.json[0m
+-rw-r----- 1 root minicraftvpsuk 210 Jan 30 06:14 [1;31m/etc/imunify360/user_config/minicraftvpsuk/imunify360.config[0m
+
+[1;34m╔══════════╣ [1;32mInteresting writable files owned by me or writable by everyone (not in Home) (max 200)
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#writable-files
+[0m/dev/shm
+[1;31m/etc/[0mcl.php.d
+[1;31m/etc/[0mcl.php.d/alt-php53
+[1;31m/etc/[0mcl.php.d/alt-php53/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php54
+[1;31m/etc/[0mcl.php.d/alt-php54/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php55
+[1;31m/etc/[0mcl.php.d/alt-php55/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php56
+[1;31m/etc/[0mcl.php.d/alt-php56/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php70
+[1;31m/etc/[0mcl.php.d/alt-php70/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php73
+[1;31m/etc/[0mcl.php.d/alt-php73/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php74
+[1;31m/etc/[0mcl.php.d/alt-php74/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php80
+[1;31m/etc/[0mcl.php.d/alt-php80/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php81
+[1;31m/etc/[0mcl.php.d/alt-php81/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php82
+[1;31m/etc/[0mcl.php.d/alt-php82/alt_php.ini
+[1;31m/etc/[0mcl.php.d/alt-php83
+[1;31m/etc/[0mcl.php.d/alt-php83/alt_php.ini
+[1;31m/etc/[0mcl.selector
+/home2/minicraftvpsuk
+[1;31m/lib/[0mechain.so
+/opt/alt/alt-nodejs10[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs10[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs11[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs11[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs12[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs12[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs14[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs14[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs16[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs16[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs18[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs18[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs19[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs19[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs20[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs20[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs6[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs6[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs8[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs8[1;31m/root[0m/var/tmp
+/opt/alt/alt-nodejs9[1;31m/root[0m/tmp
+/opt/alt/alt-nodejs9[1;31m/root[0m/var/tmp
+/opt/alt/php53/link
+/opt/alt/php53/var[1;31m/lib/[0mphp/session
+/opt/alt/php54/link
+/opt/alt/php54/var[1;31m/lib/[0mphp/session
+/opt/alt/php55/link
+/opt/alt/php55/var[1;31m/lib/[0mphp/session
+/opt/alt/php56/link
+/opt/alt/php56/var[1;31m/lib/[0mphp/session
+/opt/alt/php70/link
+/opt/alt/php70/var[1;31m/lib/[0mphp/session
+/opt/alt/php73/link
+/opt/alt/php73/var[1;31m/lib/[0mphp/session
+/opt/alt/php74/link
+/opt/alt/php74/var[1;31m/lib/[0mphp/session
+/opt/alt/php80/link
+/opt/alt/php80/var[1;31m/lib/[0mphp/session
+/opt/alt/php81/link
+/opt/alt/php81/var[1;31m/lib/[0mphp/session
+/opt/alt/php82/link
+/opt/alt/php82/var[1;31m/lib/[0mphp/session
+/opt/alt/php83/link
+/opt/alt/php83/var[1;31m/lib/[0mphp/session
+/opt/cpanel/ea-php73[1;31m/root[0m/tmp
+/opt/cpanel/ea-php73[1;31m/root[0m/var/tmp
+/opt/cpanel/ea-php74[1;31m/root[0m/tmp
+/opt/cpanel/ea-php74[1;31m/root[0m/var/tmp
+/opt/cpanel/ea-php81[1;31m/root[0m/tmp
+/opt/cpanel/ea-php81[1;31m/root[0m/var/tmp
+/opt/cpanel/ea-php82[1;31m/root[0m/tmp
+/opt/cpanel/ea-php82[1;31m/root[0m/var/tmp
+/opt/cpanel/ea-php83[1;31m/root[0m/tmp
+/opt/cpanel/ea-php83[1;31m/root[0m/var/tmp
+/opt/cpanel/ea-ruby27[1;31m/root[0m/tmp
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.2rBwGMy/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.BqoNxrg/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.fVdNWb6/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.hOSeoGB/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.Ht7GB4U/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.ihbTgs7/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.lccvA5F/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.lm3irJe/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.MdpAX6r/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.Qzrktw9/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.r9RykQB/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.WG7FYKR/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.yXkLRLi/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/run/passenger-instreg/passenger.z8Pldth/apps.s
+/opt/cpanel/ea-ruby27[1;31m/root[0m/var/tmp
+/run/cagefs
+/run/cagefs/utmp
+/run/screen
+/tmp
+/tmp/.crontab.lock
+[1;31m/usr/lib[0m/echain.so
+/var/cache/php-eaccelerator
+/var/.cagefs/.cagefs.token
+/var/cpanel/php/sessions/ea-php72
+/var/cpanel/php/sessions/ea-php73
+/var/cpanel/php/sessions/ea-php74
+/var/cpanel/php/sessions/ea-php80
+/var/cpanel/php/sessions/ea-php81
+[3m#)You_can_write_even_more_files_inside_last_directory
+[0m
+[1;31m/var/log/[0malt-php53-newrelic
+[1;31m/var/log/[0malt-php54-newrelic
+[1;31m/var/log/[0malt-php55-newrelic
+[1;31m/var/log/[0malt-php56-newrelic
+[1;31m/var/log/[0malt-php70-newrelic
+[3m#)You_can_write_even_more_files_inside_last_directory
+[0m
+/var/php/apm/db
+/var/spool/cron
+/var/spool/cron/minicraftvpsuk
+
+[1;34m╔══════════╣ [1;32mInteresting GROUP writable files (not in Home) (max 200)
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#writable-files
+[0m  Group [1;32mminicraftvpsuk:
+[0m/var/php/apm/db
+/var/cache/php-eaccelerator
+/run/screen
+
+
+
+[1;34m                            ╔═════════════════════════╗
+════════════════════════════╣ [1;32mOther Interesting Files[1;34m ╠════════════════════════════
+[1;34m                            ╚═════════════════════════╝[0m
+[1;34m╔══════════╣ [1;32m.sh files in path
+[0m[1;34m╚ [1;34m[3mhttps://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#scriptbinaries-in-path
+[0m/usr/bin[1;32m/lesspipe.sh[0m
+
+[1;34m╔══════════╣ [1;32mExecutable files potentially added by user (limit 70)
+[0m2025-03-21+14:57:15.4686286800 /usr/local/lsws/admin/misc/ap_lsws.sh
+2025-03-20+22:00:14.3869161490 /usr/lib/echain.so
+2025-03-20+22:00:14.3869161490 /lib/echain.so
+2025-02-21+14:15:04.8753059070 /usr/local/lsws/bin/lshttpd
+2024-12-14+07:51:27.5202071470 /opt/cpanel/ea-php81/root/usr/lib64/php/modules/timezonedb.so
+2024-12-14+07:51:20.3861307830 /opt/cpanel/ea-php73/root/usr/lib64/php/modules/timezonedb.so
+2024-12-14+07:51:13.3010549440 /opt/cpanel/ea-php74/root/usr/lib64/php/modules/timezonedb.so
+2024-12-14+07:51:05.6769733340 /opt/cpanel/ea-php72/root/usr/lib64/php/modules/timezonedb.so
+2024-12-14+07:50:58.3378947760 /opt/cpanel/ea-php83/root/usr/lib64/php/modules/timezonedb.so
+2024-12-14+07:50:51.2648190650 /opt/cpanel/ea-php82/root/usr/lib64/php/modules/timezonedb.so
+2024-04-18+08:12:58.3184085260 /usr/local/lsws/lsrecaptcha/_recaptcha
+2024-04-18+08:12:58.2844082190 /usr/local/lsws/modules.6.1.2/modpagespeed.so
+2024-04-18+08:12:58.2304077310 /usr/local/lsws/bin/lscgid.6.1.2
+2024-04-18+08:12:58.2194076320 /usr/local/lsws/bin/lshttpd.6.1.2
+2024-04-18+08:12:58.2004074600 /usr/local/lsws/bin/lswsctrl.6.1.2
+2024-04-18+08:12:58.1944074060 /usr/local/lsws/bin/wswatch.sh
+2024-04-18+08:12:58.1614071080 /usr/local/lsws/admin/html.6.1.2/static/images/icons/debug.gif
+2024-04-18+08:12:58.1244067730 /usr/local/lsws/fcgi-bin/lsphp
+2024-04-18+08:12:58.1104066470 /usr/local/lsws/DEFAULT/cgi-bin/helloworld
+2024-04-18+08:12:47.4473103250 /usr/local/lsws/admin/misc/chroot.sh
+2024-04-18+08:12:47.4223100990 /usr/local/lsws/admin/misc/purge_cache_by_url
+2024-04-18+08:12:47.4173100540 /usr/local/lsws/admin/misc/cpanel_restart_httpd.in
+2024-04-18+08:12:47.4073099640 /usr/local/lsws/admin/misc/ap_lsws.sh.in
+2024-04-18+08:12:47.3953098550 /usr/local/lsws/admin/misc/cp_switch_ws.sh
+2024-04-18+08:12:47.3903098100 /usr/local/lsws/admin/misc/fix_cagefs.sh
+2024-04-18+08:12:47.3853097650 /usr/local/lsws/admin/misc/lsup6.sh
+2024-04-18+08:12:47.3793097110 /usr/local/lsws/admin/misc/cleanlitemage.sh
+2024-04-18+08:12:47.3743096650 /usr/local/lsws/admin/misc/cleancache.sh
+2024-04-18+08:12:47.3683096110 /usr/local/lsws/admin/misc/update.sh
+2024-04-18+08:12:47.3633095660 /usr/local/lsws/admin/misc/awstats_install.sh
+2024-04-18+08:12:47.3583095210 /usr/local/lsws/admin/misc/create_admin_keypair.sh
+2024-04-18+08:12:47.3523094670 /usr/local/lsws/admin/misc/fp_install.sh
+2024-04-18+08:12:47.3473094220 /usr/local/lsws/admin/misc/gzipStatic.sh
+2024-04-18+08:12:47.3423093760 /usr/local/lsws/admin/misc/mgr_ver.sh
+2024-04-18+08:12:47.3363093220 /usr/local/lsws/admin/misc/enable_ruby_python_selector.sh
+2024-04-18+08:12:47.3303092680 /usr/local/lsws/admin/misc/lsws.rc.gentoo
+2024-04-18+08:12:47.3263092320 /usr/local/lsws/admin/misc/lshttpd.service
+2024-04-18+08:12:47.3213091870 /usr/local/lsws/admin/misc/lsws.rc
+2024-04-18+08:12:47.3163091420 /usr/local/lsws/admin/misc/uninstall.sh
+2024-04-18+08:12:47.3113090960 /usr/local/lsws/admin/misc/rc-uninst.sh
+2024-04-18+08:12:47.3063090510 /usr/local/lsws/admin/misc/admpass.sh
+2024-04-18+08:12:47.3003089970 /usr/local/lsws/admin/misc/rc-inst.sh
+2024-04-18+08:12:47.2943089430 /usr/local/lsws/admin/fcgi-bin/admin_php5
+2024-04-18+08:12:47.2813088250 /usr/local/lsws/fcgi-bin/lswsgi_wrapper
+2024-04-18+08:12:47.2763087800 /usr/local/lsws/fcgi-bin/lsnode.js
+2024-04-18+08:12:47.2713087350 /usr/local/lsws/fcgi-bin/RailsRunner.rb.2.3
+2024-04-18+08:12:47.2663086900 /usr/local/lsws/fcgi-bin/RailsRunner.rb
+2024-04-18+08:12:47.2603086360 /usr/local/lsws/fcgi-bin/RackRunner.rb
+2024-04-18+08:12:47.2553085910 /usr/local/lsws/fcgi-bin/lsperld.fpl
+2024-04-18+08:12:47.2493085360 /usr/local/lsws/add-ons/modsec/inspectmulti.sh
+2024-04-18+08:12:47.2383084370 /usr/local/lsws/add-ons/rrdgraph/rrdgraph_install.sh
+2024-04-18+08:12:47.2373084280 /usr/local/lsws/add-ons/cpanel/lsws_whm_plugin/lsws_whm_plugin_install.sh
+
+[1;34m╔══════════╣ [1;32mUnexpected in /opt (usually empty)
+[0mtotal 72
+drwxr-xr-x  18 root root 4096 Mar 29  2024 .
+drwxr-xr-x  16 root root 4096 Jul 26  2024 ..
+drwxr-xr-x.  2 root root 4096 Mar 21 11:05 ai-bolit
+drwxr-xr-x. 81 root root 4096 Feb 13 04:48 alt
+drwxr-xr-x.  2 root root 4096 Jul  9  2024 app-version-detector
+drwxr-xr-x. 16 root root 4096 Mar 21 14:05 cloudlinux
+drwxr-xr-x.  2 root root 4096 Mar  5  2024 cloudlinux-linksafe
+drwxr-xr-x   2 root root 4096 Mar 29  2024 cloudlinux-site-optimization-module
+drwxr-xr-x   3 root root 4096 Dec 18 09:21 clwpos
+drwxr-xr-x. 27 root root 4096 Feb 13 04:48 cpanel
+drwx--x---  13  975  968 4096 Apr 25  2024 cpanel-ccs
+drwxr-xr-x   4 root root 4096 Oct 18 05:31 i360_pam_imunify
+drwx------   2 root root 4096 Feb 26 12:21 i360_wafd_imunify
+drwxr-xr-x.  5 root root 4096 Mar 14  2024 imunify360
+drwxr-xr-x   9 root root 4096 Feb 26 12:21 imunify360-webshield
+drwxr-xr-x.  2 root root 4096 Dec 18 09:18 liblve
+drwxr-xr-x.  3 root root 4096 Mar  5  2024 plesk
+drwxr-xr-x   3 root root 4096 Mar 11  2024 suphp
+
+[1;34m╔══════════╣ [1;32mUnexpected in root
+[0m[1;31m/home1[0m
+[1;31m/home2[0m
+
+[1;34m╔══════════╣ [1;32mModified interesting files in the last 5mins (limit 100)
+[0m[1;31m/tmp[0m/.crontab.lock
+/opt/cloudlinux/litespeed_status
+[1;31m/var/spool/cron[0m/minicraftvpsuk
+[1;31m/home2/minicraftvpsuk[0m/all.txt
+[1;31m/home2/minicraftvpsuk/.cagefs/var/spool/cron[0m/minicraftvpsuk
+[1;31m/home2/minicraftvpsuk/.cagefs/tmp[0m/.crontab.lock
+
+
+[1;34m╔══════════╣ [1;32mFiles inside /home2/minicraftvpsuk (limit 20)
+[0mtotal 282236
+drwx--x--x 21 minicraftvpsuk minicraftvpsuk      4096 Mar 21 16:30 .
+drwxr-xr-x  3 root           nobody              4096 Jan 30 06:14 ..
+lrwxrwxrwx  1 minicraftvpsuk minicraftvpsuk        40 Jan 30 06:26 access-logs -> /etc/apache2/logs/domlogs/minicraftvpsuk
+-rw-r--r--  1 minicraftvpsuk minicraftvpsuk    110084 Mar 21 16:31 all.txt
+-rw-r--r--  1 minicraftvpsuk minicraftvpsuk        18 Jan 30 06:13 .bash_logout
+-rw-r--r--  1 minicraftvpsuk minicraftvpsuk       141 Jan 30 06:13 .bash_profile
+-rw-r--r--  1 minicraftvpsuk minicraftvpsuk       376 Jan 30 06:13 .bashrc
+drwxrwx--x  5 minicraftvpsuk minicraftvpsuk      4096 Jan 30 06:14 .cagefs
+drwxr-xr-x  3 minicraftvpsuk minicraftvpsuk      4096 Jan 30 06:13 .caldav
+drwxr-xr-x  2 minicraftvpsuk minicraftvpsuk      4096 Jan 30 11:07 .cl.selector
+drwx------  2 minicraftvpsuk minicraftvpsuk      4096 Jan 30 06:14 .clwpos
+drwx------  7 minicraftvpsuk minicraftvpsuk      4096 Mar 21 16:21 .cpanel
+drwxr-x---  3 minicraftvpsuk mail                4096 Jan 30 06:13 etc
+drwx------  2 minicraftvpsuk minicraftvpsuk      4096 Mar 21 16:31 .gnupg
+drwxr-xr-x  3 minicraftvpsuk minicraftvpsuk      4096 Jan 30 06:36 .htpasswds
+drwxr-xr-x  2 minicraftvpsuk minicraftvpsuk      4096 Jan 30 06:17 .koality
+-rw-------  1 minicraftvpsuk minicraftvpsuk       471 Mar 21 16:20 .lastlogin
+drwx------  2 minicraftvpsuk minicraftvpsuk      4096 Mar 21 13:04 logs
+drwxrws---  2 nobody         minicraftvpsuk      4096 Jan 30 06:14 lscache
+drwxr-x--x 10 minicraftvpsuk minicraftvpsuk      4096 Jan 30 06:37 mail
+-rw-r--r--  1 minicraftvpsuk minicraftvpsuk       102 Jan 30 11:21 .myimunify_id
+drwxr-x---  3 minicraftvpsuk minicraftvpsuk      4096 Jan 30 06:13 public_ftp
+
+[1;34m╔══════════╣ [1;32mFiles inside others home (limit 20)
+[0m/var/www/html/401.shtml
+/var/www/html/400.shtml
+/var/www/html/404.shtml
+/var/www/html/cp_errordocument.shtml
+/var/www/html/index.html
+/var/www/html/500.shtml
+/var/www/html/413.shtml
+/var/www/html/403.shtml
+
+[1;34m╔══════════╣ [1;32mSearching installed mail applications
+[0mexim
+sendmail
+
+[1;34m╔══════════╣ [1;32mMails (limit 50)
+[0m
+[1;34m╔══════════╣ [1;32mBackup files (limited 100)
+[0m-rw-r--r-- 1 root root 6559 Feb 20 15:30 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/plugins/__pycache__/[1;31mbackup[0m_info_sender.cpython-311.pyc
+-rw-r--r-- 1 root root 6559 Feb 20 15:30 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/plugins/__pycache__/[1;31mbackup[0m_info_sender.cpython-311.opt-1.pyc
+-rw-r--r-- 1 root root 3129 Feb 20 15:23 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/plugins/[1;31mbackup[0m_info_sender.py
+-rw-r--r-- 1 root root 25661 Feb 20 15:30 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/subsys/__pycache__/[1;31mbackup[0m_systems.cpython-311.pyc
+-rw-r--r-- 1 root root 25661 Feb 20 15:30 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/subsys/__pycache__/[1;31mbackup[0m_systems.cpython-311.opt-1.pyc
+-rw-r--r-- 1 root root 11462 Feb 20 15:23 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/subsys/[1;31mbackup[0m_systems.py
+-rw-r--r-- 1 root root 506 Feb 20 15:30 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/migrations/__pycache__/082_add_cl_on_premise_[1;31mbackup[0m_option.cpython-311.pyc
+-rw-r--r-- 1 root root 506 Feb 20 15:30 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/migrations/__pycache__/082_add_cl_on_premise_[1;31mbackup[0m_option.cpython-311.opt-1.pyc
+-rw-r--r-- 1 root root 2098 Feb 20 15:30 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/migrations/__pycache__/061_migrate_[1;31mbackup[0m_system_conf.cpython-311.opt-1.pyc
+-rw-r--r-- 1 root root 2098 Feb 20 15:30 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/migrations/__pycache__/061_migrate_[1;31mbackup[0m_system_conf.cpython-311.pyc
+-rw-r--r-- 1 root root 532 Feb 20 15:23 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/migrations/082_add_cl_on_premise_[1;31mbackup[0m_option.py
+-rw-r--r-- 1 root root 1349 Feb 20 15:23 /opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/migrations/061_migrate_[1;31mbackup[0m_system_conf.py
+-rw-r--r-- 2 root root 3819 Feb 24 15:41 /opt/imunify360/venv/lib/python3.11/site-packages/imav/malwarelib/subsys/__pycache__/restore_from_[1;31mbackup[0m.cpython-311.opt-1.pyc
+-rw-r--r-- 2 root root 3819 Feb 24 15:41 /opt/imunify360/venv/lib/python3.11/site-packages/imav/malwarelib/subsys/__pycache__/restore_from_[1;31mbackup[0m.cpython-311.pyc
+-rw-r--r-- 1 root root 2484 Feb 24 15:38 /opt/imunify360/venv/lib/python3.11/site-packages/imav/malwarelib/subsys/restore_from_[1;31mbackup[0m.py
+-rw-r--r-- 2 root root 13858 Feb 24 15:41 /opt/imunify360/venv/lib/python3.11/site-packages/imav/malwarelib/advanced/rpc/endpoints/__pycache__/[1;31mbackup[0m.cpython-311.pyc
+-rw-r--r-- 2 root root 13858 Feb 24 15:41 /opt/imunify360/venv/lib/python3.11/site-packages/imav/malwarelib/advanced/rpc/endpoints/__pycache__/[1;31mbackup[0m.cpython-311.opt-1.pyc
+-rw-r--r-- 1 root root 9398 Feb 24 15:38 /opt/imunify360/venv/lib/python3.11/site-packages/imav/malwarelib/advanced/rpc/endpoints/[1;31mbackup[0m.py
+-rw-r--r-- 1 root root 1947 Feb 24 15:34 /opt/imunify360/venv/lib/python3.11/site-packages/imav/malwarelib/advanced/rpc/schema/[1;31mbackup[0m-systems.yaml
+-rw-r--r-- 1 root root 1788 Feb 24 15:41 /opt/imunify360/venv/lib/python3.11/site-packages/imav/malwarelib/advanced/rpc/schema/[1;31mbackup[0m-systems.pickle
+-rw-r--r-- 2 root root 5736 Feb 24 15:41 /opt/imunify360/venv/lib/python3.11/site-packages/imav/plugins/__pycache__/restore_from_[1;31mbackup[0m.cpython-311.opt-1.pyc
+-rw-r--r-- 2 root root 5736 Feb 24 15:41 /opt/imunify360/venv/lib/python3.11/site-packages/imav/plugins/__pycache__/restore_from_[1;31mbackup[0m.cpython-311.pyc
+-rw-r--r-- 1 root root 3513 Feb 24 15:38 /opt/imunify360/venv/lib/python3.11/site-packages/imav/plugins/restore_from_[1;31mbackup[0m.py
+-rw-r--r-- 2 root root 20032 Jan 23  2024 /opt/imunify360/venv/lib/python3.11/site-packages/restore_infected/__pycache__/[1;31mbackup[0m_backends_lib.cpython-311.opt-1.pyc
+-rw-r--r-- 2 root root 20032 Jan 23  2024 /opt/imunify360/venv/lib/python3.11/site-packages/restore_infected/__pycache__/[1;31mbackup[0m_backends_lib.cpython-311.pyc
+-rw-r--r-- 1 root root 9771 Jan 22  2024 /opt/imunify360/venv/lib/python3.11/site-packages/restore_infected/[1;31mbackup[0m_backends_lib.py
+-rw-r--r-- 1 root root 7138 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/form-data/README.md[1;31m.bak[0m
+-rw-r--r-- 1 root root 7138 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/form-data/README.md[1;31m.bak[0m
+-rw-r--r-- 1 root root 7138 Mar 22  2023 /opt/alt/alt-nodejs10/root/usr/lib/node_modules/npm/node_modules.bundled/form-data/README.md[1;31m.bak[0m
+-rw-r--r-- 1 root root 7138 Mar 23  2023 /opt/alt/alt-nodejs14/root/usr/lib/node_modules/npm/node_modules.bundled/form-data/README.md[1;31m.bak[0m
+-rw-r--r-- 1 root root 7138 Sep 28  2021 /opt/alt/alt-nodejs8/root/usr/lib/node_modules/npm/node_modules.bundled/form-data/README.md[1;31m.bak[0m
+-rw-r--r-- 1 root root 7141 Sep 28  2021 /opt/alt/alt-nodejs9/root/usr/lib/node_modules/npm/node_modules.bundled/request/node_modules/form-data/README.md[1;31m.bak[0m
+-rwxr-xr-x 1 root root 51256 Jan 18  2024 /lib64/mysql/plugin/component_mysql[1;31mbackup[0m.so
+-rwxr-xr-x 1 root root 81672 Jan 18  2024 /lib64/mysql/plugin/debug/component_mysql[1;31mbackup[0m.so
+-rwxr-xr-x 1 root root 51256 Jan 18  2024 /usr/lib64/mysql/plugin/component_mysql[1;31mbackup[0m.so
+-rwxr-xr-x 1 root root 81672 Jan 18  2024 /usr/lib64/mysql/plugin/debug/component_mysql[1;31mbackup[0m.so
+-rw-r--r-- 1 root root 7138 Mar 10  2021 /usr/lib/node_modules/npm/node_modules/form-data/README.md[1;31m.bak[0m
+-rw-r--r-- 1 root root 2564 May 24  2024 /usr/lib/modules/4.18.0-513.24.1.lve.2.el8.x86_64/kernel/drivers/net/team/team_mode_active[1;31mbackup[0m.ko.xz
+-rw-r--r-- 1 root root 2560 Feb 22  2024 /usr/lib/modules/4.18.0-513.18.1.lve.el8.x86_64/kernel/drivers/net/team/team_mode_active[1;31mbackup[0m.ko.xz
+-rw-r--r-- 1 root root 2564 Mar 30  2024 /usr/lib/modules/4.18.0-513.18.1.lve.2.el8.x86_64/kernel/drivers/net/team/team_mode_active[1;31mbackup[0m.ko.xz
+-rw-r--r-- 1 root root 2564 Mar 21  2024 /usr/lib/modules/4.18.0-513.18.1.lve.1.el8.x86_64/kernel/drivers/net/team/team_mode_active[1;31mbackup[0m.ko.xz
+-rw-r--r-- 1 root root 43 Sep 14  2023 /usr/share/man/man1/doveadm-[1;31mbackup[0m.1.gz
+-rw-r--r-- 1 root root 2670 Dec  8  2016 /usr/share/man/man1/db_hot[1;31mbackup[0m.1.gz
+-r--r--r-- 1 root root 3124 Nov 15  2023 /usr/share/man/man8/vgcfg[1;31mbackup[0m.8.gz
+-rw-r--r-- 1 root root 7138 Mar 10  2021 /lib/node_modules/npm/node_modules/form-data/README.md[1;31m.bak[0m
+-rw-r--r-- 1 root root 2564 May 24  2024 /lib/modules/4.18.0-513.24.1.lve.2.el8.x86_64/kernel/drivers/net/team/team_mode_active[1;31mbackup[0m.ko.xz
+-rw-r--r-- 1 root root 2560 Feb 22  2024 /lib/modules/4.18.0-513.18.1.lve.el8.x86_64/kernel/drivers/net/team/team_mode_active[1;31mbackup[0m.ko.xz
+-rw-r--r-- 1 root root 2564 Mar 30  2024 /lib/modules/4.18.0-513.18.1.lve.2.el8.x86_64/kernel/drivers/net/team/team_mode_active[1;31mbackup[0m.ko.xz
+-rw-r--r-- 1 root root 2564 Mar 21  2024 /lib/modules/4.18.0-513.18.1.lve.1.el8.x86_64/kernel/drivers/net/team/team_mode_active[1;31mbackup[0m.ko.xz
+-rw-r--r-- 1 minicraftvpsuk minicraftvpsuk 412 Jul 29  2024 /home2/minicraftvpsuk/public_html/.htaccess.bk
+
+[1;34m╔══════════╣ [1;32mSearching tables inside readable .db/.sql/.sqlite files (limit 100)
+[0mFound /etc/pki/nssdb/cert8[1;31m.db[0m: Berkeley DB 1.85 (Hash, version 2, native byte-order)
+Found /etc/pki/nssdb/cert9[1;31m.db[0m: SQLite 3.x database, last written using SQLite version 0
+Found /etc/pki/nssdb/key3[1;31m.db[0m: Berkeley DB 1.85 (Hash, version 2, native byte-order)
+Found /etc/pki/nssdb/key4[1;31m.db[0m: SQLite 3.x database, last written using SQLite version 0
+Found /etc/pki/nssdb/secmod[1;31m.db[0m: Berkeley DB 1.85 (Hash, version 2, native byte-order)
+Found /opt/ai-bolit/AIBOLIT-BINMALWARE[1;31m.db[0m: regular file, no read permission
+Found /opt/ai-bolit/ai-bolit-hoster-full.cache[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /opt/ai-bolit/ai-bolit-hoster-full[1;31m.db[0m: regular file, no read permission
+Found /opt/ai-bolit/AIBOLIT-WHITELIST[1;31m.db[0m: regular file, no read permission
+Found /opt/ai-bolit/blacklistedUrls[1;31m.db[0m: regular file, no read permission
+Found /opt/ai-bolit/mds-ai-bolit-hoster.cache[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /opt/ai-bolit/mds-ai-bolit-hoster[1;31m.db[0m: regular file, no read permission
+Found /opt/ai-bolit/mds-procu2[1;31m.db[0m: regular file, no read permission
+Found /opt/ai-bolit/procu2[1;31m.db[0m: regular file, no read permission
+Found /opt/ai-bolit/whitelistUrls[1;31m.db[0m: regular file, no read permission
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/ai-bolit[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/ai-bolit-hoster[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/ai-bolit-hoster-full[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/AIBOLIT-WHITELIST[1;31m.db[0m: data
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/blacklistedUrls[1;31m.db[0m: ASCII text
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/hyperscan/hs_cron[1;31m.db[0m: data
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/hyperscan/hs_js[1;31m.db[0m: data
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/hyperscan/hs_php[1;31m.db[0m: data
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/hyperscan/hs_sus[1;31m.db[0m: data
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/hyperscan/hs_susext[1;31m.db[0m: data
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/mds-ai-bolit-hoster[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/mds-procu2[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/patchman[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/patchman_map[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/procu2[1;31m.db[0m: ASCII text, with very long lines, with no line terminators
+Found /var/imunify360/files/sigs/v1_2025-03-21T100437.842103Z/aibolit/whitelistUrls[1;31m.db[0m: ASCII text
+
+[1;32m -> Extracting tables from[0m /etc/pki/nssdb/cert9.db [1;90m(limit 20)
+[0m[1;32m -> Extracting tables from[0m /etc/pki/nssdb/key4.db [1;90m(limit 20)
+[0m
+[1;34m╔══════════╣ [1;32mWeb files?(output limit)
+[0m/var/www/:
+total 16K
+drwxr-xr-x   4 root root 4.0K Mar  5  2024 .
+drwxr-xr-x  13 root root 4.0K Mar  8 15:52 ..
+drwxr-xr-x.  2 root root 4.0K Dec 10 19:41 cgi-bin
+drwxr-xr-x.  3 root root 4.0K Dec 10 19:41 html
+
+/var/www/cgi-bin:
+total 8.0K
+drwxr-xr-x. 2 root root 4.0K Dec 10 19:41 .
+
+[1;34m╔══════════╣ [1;32mAll relevant hidden files (not in /sys/ or the ones listed in the previous check) (limit 70)
+[0m-rw-r--r-- 1 minicraftvpsuk minicraftvpsuk 0 Mar 21 16:30 /tmp/.crontab.lock
+-rw-r--r-- 1 root root 0 Mar 29  2024 /opt/alt/php53/usr/share/pear/.lock
+-rw-r--r-- 1 root root 0 Dec 18  2019 /opt/alt/php53/usr/share/pear/test/HttpFoundation/Symfony/Component/HttpFoundation/Tests/File/Fixtures/directory/.empty
+-rw-r--r-- 1 root root 1 Dec 18  2019 /opt/alt/php53/usr/share/pear/test/HttpFoundation/Symfony/Component/HttpFoundation/Tests/File/Fixtures/.unknownextension
+-rw-r--r-- 1 root root 392471 Mar 29  2024 /opt/alt/php53/usr/share/pear/.filemap
+-rw-r--r-- 1 root root 220 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/promise-retry/.editorconfig
+-rw-r--r-- 1 root root 179 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/err-code/.editorconfig
+-rw-r--r-- 1 root root 127 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/err-code/.eslintrc.json
+-rw-r--r-- 1 root root 1160 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/color-name/.eslintrc.json
+-rw-r--r-- 1 root root 178 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/http-signature/.dir-locals.el
+-rw-r--r-- 1 root root 421 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/fs-vacuum/.eslintrc
+-rw-r--r-- 1 root root 62 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/ajv/scripts/.eslintrc.yml
+-rw-r--r-- 1 root root 439 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/ajv/.tonic_example.js
+-rw-r--r-- 1 root root 286 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/extend/.editorconfig
+-rw-r--r-- 1 root root 4095 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/extend/.jscs.json
+-rw-r--r-- 1 root root 46 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/debug/.coveralls.yml
+-rw-r--r-- 1 root root 5 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/qs/.eslintignore
+-rw-r--r-- 1 root root 399 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/qs/.editorconfig
+-rw-r--r-- 1 root root 562 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/fast-json-stable-stringify/.eslintrc.yml
+-rw-r--r-- 1 root root 193 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/performance-now/.tm_properties
+-rw-r--r-- 1 root root 630 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/json-schema-traverse/.eslintrc.yml
+-rw-r--r-- 1 root root 91 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/json-schema-traverse/spec/.eslintrc.yml
+-rw-r--r-- 1 root root 6 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/psl/.eslintignore
+-rw-r--r-- 1 root root 84 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/socks/.prettierrc.yaml
+-rw-r--r-- 1 root root 1464 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/uuid/.eslintrc.json
+-rw-r--r-- 1 root root 277 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/node_modules.bundled/worker-farm/.editorconfig
+-rw-r--r-- 1 root root 3184 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/.mailmap
+-rw-r--r-- 1 root root 267 Oct 19  2021 /opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/.licensee.json
+-rw-r--r-- 1 root root 0 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/.npmrc
+-rw-r--r-- 1 root root 220 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/promise-retry/.editorconfig
+-rw-r--r-- 1 root root 286 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/es-to-primitive/.editorconfig
+-rw-r--r-- 1 root root 4130 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/es-to-primitive/.jscs.json
+-rw-r--r-- 1 root root 2878 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/is-date-object/.jscs.json
+-rw-r--r-- 1 root root 179 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/err-code/.editorconfig
+-rw-r--r-- 1 root root 127 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/err-code/.eslintrc.json
+-rw-r--r-- 1 root root 1160 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/color-name/.eslintrc.json
+-rw-r--r-- 1 root root 178 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/http-signature/.dir-locals.el
+-rw-r--r-- 1 root root 5 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/is-symbol/.nvmrc
+-rw-r--r-- 1 root root 276 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/is-symbol/.editorconfig
+-rw-r--r-- 1 root root 4128 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/is-symbol/.jscs.json
+-rw-r--r-- 1 root root 421 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/fs-vacuum/.eslintrc
+-rw-r--r-- 1 root root 286 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/function-bind/.editorconfig
+-rw-r--r-- 1 root root 4140 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/function-bind/.jscs.json
+-rw-r--r-- 1 root root 286 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/is-callable/.editorconfig
+-rw-r--r-- 1 root root 993 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/is-callable/.istanbul.yml
+-rw-r--r-- 1 root root 4128 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/is-callable/.jscs.json
+-rw-r--r-- 1 root root 276 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/es-abstract/.editorconfig
+-rw-r--r-- 1 root root 4003 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/es-abstract/.jscs.json
+-rw-r--r-- 1 root root 234 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/es-abstract/.nycrc
+-rw-r--r-- 1 root root 715 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/https-proxy-agent/.editorconfig
+-rw-r--r-- 1 root root 2935 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/https-proxy-agent/.eslintrc.js
+-rw-r--r-- 1 root root 276 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/define-properties/.editorconfig
+-rw-r--r-- 1 root root 4108 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/define-properties/.jscs.json
+-rw-r--r-- 1 root root 13 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/normalize-package-data/node_modules/resolve/.eslintignore
+-rw-r--r-- 1 root root 286 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/normalize-package-data/node_modules/resolve/.editorconfig
+-rw-r--r-- 1 root root 286 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/extend/.editorconfig
+-rw-r--r-- 1 root root 4096 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/extend/.jscs.json
+-rw-r--r-- 1 root root 46 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/debug/.coveralls.yml
+-rw-r--r-- 1 root root 5 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/qs/.eslintignore
+-rw-r--r-- 1 root root 399 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/qs/.editorconfig
+-rw-r--r-- 1 root root 4140 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/is-regex/.jscs.json
+-rw-r--r-- 1 root root 562 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/fast-json-stable-stringify/.eslintrc.yml
+-rw-r--r-- 1 root root 193 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/performance-now/.tm_properties
+-rw-r--r-- 1 root root 276 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/object.getownpropertydescriptors/.editorconfig
+-rw-r--r-- 1 root root 4140 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/object.getownpropertydescriptors/.jscs.json
+-rw-r--r-- 1 root root 6 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/psl/.eslintignore
+-rw-r--r-- 1 root root 84 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/smart-buffer/.prettierrc.yaml
+-rw-r--r-- 1 root root 62 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/har-validator/node_modules/ajv/scripts/.eslintrc.yml
+-rw-r--r-- 1 root root 439 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/har-validator/node_modules/ajv/.tonic_example.js
+-rw-r--r-- 1 root root 630 Jan 11  2022 /opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/node_modules.bundled/har-validator/node_modules/json-schema-traverse/.eslintrc.yml
+
+[1;34m╔══════════╣ [1;32mReadable files inside /tmp, /var/tmp, /private/tmp, /private/var/at/tmp, /private/var/tmp, and backup folders (limit 70)
+[0m-rw-r--r-- 1 minicraftvpsuk minicraftvpsuk 0 Mar 21 16:30 /tmp/.crontab.lock
+
+[1;34m╔══════════╣ [1;32mSearching passwords in history files
+[0mBinary file /opt/alt/python36/lib64/python3.6/idlelib/idle_test/__pycache__/test_history.cpython-36.opt-1.pyc matches
+Binary file /opt/alt/python36/lib64/python3.6/idlelib/idle_test/__pycache__/test_history.cpython-36.opt-2.pyc matches
+Binary file /opt/alt/python36/lib64/python3.6/idlelib/idle_test/__pycache__/test_history.cpython-36.pyc matches
+/opt/alt/python36/lib64/python3.6/idlelib/idle_test/test_history.py:    [1;31m@[0mclassmethod
+/opt/alt/python36/lib64/python3.6/idlelib/idle_test/test_history.py:    [1;31m@[0mclassmethod
+/opt/alt/python36/lib64/python3.6/idlelib/idle_test/test_history.py:        cls.[1;31mroot[0m = tk.Tk()
+/opt/alt/python36/lib64/python3.6/idlelib/idle_test/test_history.py:        cls.[1;31mroot[0m.withdraw()
+/opt/alt/python36/lib64/python3.6/idlelib/idle_test/test_history.py:        self.text = text = TextWrapper(self.[1;31mroot[0m)
+/opt/alt/python36/lib64/python3.6/idlelib/idle_test/test_history.py:    [1;31m@[0mclassmethod
+/opt/alt/python36/lib64/python3.6/idlelib/idle_test/test_history.py:        cls.[1;31mroot[0m.destroy()
+/opt/alt/python36/lib64/python3.6/idlelib/idle_test/test_history.py:        del cls.[1;31mroot[0m
+Binary file /opt/alt/python37/lib64/python3.7/idlelib/idle_test/__pycache__/test_history.cpython-37.opt-1.pyc matches
+Binary file /opt/alt/python37/lib64/python3.7/idlelib/idle_test/__pycache__/test_history.cpython-37.opt-2.pyc matches
+Binary file /opt/alt/python37/lib64/python3.7/idlelib/idle_test/__pycache__/test_history.cpython-37.pyc matches
+/opt/alt/python37/lib64/python3.7/idlelib/idle_test/test_history.py:    [1;31m@[0mclassmethod
+/opt/alt/python37/lib64/python3.7/idlelib/idle_test/test_history.py:    [1;31m@[0mclassmethod
+/opt/alt/python37/lib64/python3.7/idlelib/idle_test/test_history.py:        cls.[1;31mroot[0m = tk.Tk()
+/opt/alt/python37/lib64/python3.7/idlelib/idle_test/test_history.py:        cls.[1;31mroot[0m.withdraw()
+/opt/alt/python37/lib64/python3.7/idlelib/idle_test/test_history.py:        self.text = text = TextWrapper(self.[1;31mroot[0m)
+/opt/alt/python37/lib64/python3.7/idlelib/idle_test/test_history.py:    [1;31m@[0mclassmethod
+/opt/alt/python37/lib64/python3.7/idlelib/idle_test/test_history.py:        cls.[1;31mroot[0m.destroy()
+/opt/alt/python37/lib64/python3.7/idlelib/idle_test/test_history.py:        del cls.[1;31mroot[0m
+/opt/alt/ruby30/share/gems/gems/rake-13.0.3/lib/rake/thread_history_display.rb:      [1;31m@[0mstats   = stats
+/opt/alt/ruby30/share/gems/gems/rake-13.0.3/lib/rake/thread_history_display.rb:      [1;31m@[0mitems   = { _seq_: 1  }
+/opt/alt/ruby30/share/gems/gems/rake-13.0.3/lib/rake/thread_history_display.rb:      [1;31m@[0mthreads = { _seq_: "A" }
+/opt/alt/ruby31/share/gems/gems/rake-13.0.6/lib/rake/thread_history_display.rb:      [1;31m@[0mstats   = stats
+/opt/alt/ruby31/share/gems/gems/rake-13.0.6/lib/rake/thread_history_display.rb:      [1;31m@[0mitems   = { _seq_: 1  }
+/opt/alt/ruby31/share/gems/gems/rake-13.0.6/lib/rake/thread_history_display.rb:      [1;31m@[0mthreads = { _seq_: "A" }
+/opt/alt/ruby32/share/gems/gems/rake-13.0.6/lib/rake/thread_history_display.rb:      [1;31m@[0mstats   = stats
+/opt/alt/ruby32/share/gems/gems/rake-13.0.6/lib/rake/thread_history_display.rb:      [1;31m@[0mitems   = { _seq_: 1  }
+/opt/alt/ruby32/share/gems/gems/rake-13.0.6/lib/rake/thread_history_display.rb:      [1;31m@[0mthreads = { _seq_: "A" }
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mcode_lines = code_lines
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mhistory = [block]
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:        [1;31m@[0mhistory << CodeBlock.new(lines: @code_lines[before_index..after_index])
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      if [1;31m@[0mhistory.length > 1
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:        [1;31m@[0mhistory.pop
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mbefore_index != current.lines.first.index ||
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:        [1;31m@[0mafter_index != current.lines.last.index
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mbefore_index = if up_index && up_index < @before_index
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:        [1;31m@[0mbefore_index
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mafter_index = if down_index && down_index > @after_index
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:        [1;31m@[0mafter_index
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      return nil if [1;31m@[0mbefore_index <= 0
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mcode_lines[@before_index - 1]
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      return nil if [1;31m@[0mafter_index >= @code_lines.length
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mcode_lines[@after_index + 1]
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mcode_lines[@before_index..@after_index]
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mcode_lines[0...@before_index] || []
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mcode_lines[@after_index.next..-1] || []
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mhistory.last
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mbefore_index = current.lines.first.index
+/opt/alt/ruby32/share/ruby/syntax_suggest/scan_history.rb:      [1;31m@[0mafter_index = current.lines.last.index
+/opt/imunify360/venv/lib/python3.11/site-packages/defence360agent/migrations/009_drop_blocklist_history.py:    id = pw.IntegerField(primary_key=True, null=True)
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:    get_domain_doc[1;31mroot[0m,
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:    [1;31m@[0mclassmethod
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:    [1;31m@[0mclassmethod
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:[1;31m@[0mdataclass(eq=False)
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:            "initiator": "[1;31mroot[0m",
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:    [1;31m@[0mproperty
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:    [1;31m@[0mabstractmethod
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:            last_change = sorted(history, key=lambda r: r["ctime"])[-1]
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:    scan_path = get_domain_doc[1;31mroot[0m(domain_id)
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:    # create a new MalwareScan instance for each scanned doc[1;31mroot[0m
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:[1;31m@[0mskip_for_im360
+/opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/009_revisium_scan_history.py:[1;31m@[0mskip_for_im360
+Binary file /opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/__pycache__/009_revisium_scan_history.cpython-311.opt-1.pyc matches
+Binary file /opt/imunify360/venv/lib/python3.11/site-packages/imav/migrations/__pycache__/009_revisium_scan_history.cpython-311.pyc matches
+
+[1;34m╔══════════╣ [1;32mSearching passwords in config PHP files
+[0m
+[1;34m╔══════════╣ [1;32mSearching *password* or *credential* files in home (limit 70)
+[0m/etc/pam.d/[1;31mpassword[0m-auth
+/etc/trusted-key.key
+/opt/alt/alt-nodejs10/root/usr/lib/node_modules/npm/lib/config/clear-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs10/root/usr/lib/node_modules/npm/lib/config/get-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs10/root/usr/lib/node_modules/npm/lib/config/set-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/lib/config/clear-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/lib/config/get-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs11/root/usr/lib/node_modules/npm/lib/config/set-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/lib/config/clear-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/lib/config/get-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs12/root/usr/lib/node_modules/npm/lib/config/set-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs14/root/usr/lib/node_modules/npm/lib/config/clear-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs14/root/usr/lib/node_modules/npm/lib/config/get-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs14/root/usr/lib/node_modules/npm/lib/config/set-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs6/root/usr/lib/node_modules/npm/lib/config/clear-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs6/root/usr/lib/node_modules/npm/lib/config/get-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs6/root/usr/lib/node_modules/npm/lib/config/set-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs8/root/usr/lib/node_modules/npm/lib/config/clear-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs8/root/usr/lib/node_modules/npm/lib/config/get-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs8/root/usr/lib/node_modules/npm/lib/config/set-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs9/root/usr/lib/node_modules/npm/lib/config/clear-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs9/root/usr/lib/node_modules/npm/lib/config/get-[1;31mcredential[0ms-by-uri.js
+/opt/alt/alt-nodejs9/root/usr/lib/node_modules/npm/lib/config/set-[1;31mcredential[0ms-by-uri.js
+/opt/alt/openldap11/share/doc/alt-openldap11-devel/drafts/draft-behera-ldap-[1;31mpassword[0m-policy-xx.txt
+/opt/alt/openssl11/share/man/html/man3/pem_[1;31mpassword[0m_cb.html
+/opt/alt/php53/usr/share/xcache_3/cacher/mk[1;31mpassword[0m.php
+/opt/alt/php54/usr/share/xcache_3/cacher/mk[1;31mpassword[0m.php
+/opt/alt/php55/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/alt/php55/usr/share/xcache_3/cacher/mk[1;31mpassword[0m.php
+/opt/alt/php56/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/alt/php56/usr/share/xcache_3/cacher/mk[1;31mpassword[0m.php
+/opt/alt/php70/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/alt/php73/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/alt/php74/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/alt/php80/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/alt/php81/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/alt/php82/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/alt/python35/share/imunify360/cln-pub.key
+/opt/alt/ruby30/share/gems/gems/bundler-2.2.33/lib/bundler/uri_[1;31mcredential[0ms_filter.rb
+/opt/alt/ruby31/share/gems/gems/bundler-2.3.26/lib/bundler/uri_[1;31mcredential[0ms_filter.rb
+/opt/alt/ruby32/share/gems/gems/bundler-2.4.19/lib/bundler/uri_[1;31mcredential[0ms_filter.rb
+/opt/cpanel/ea-php73/root/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/cpanel/ea-php74/root/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/cpanel/ea-php81/root/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/cpanel/ea-php82/root/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/cpanel/ea-php83/root/usr/include/php/ext/standard/php_[1;31mpassword[0m.h
+/opt/cpanel/ea-ruby27/root/usr/share/gems/doc/rack-2.2.10/ri/Rack/Auth/Basic/Request/[1;31mcredential[0ms-i.ri
+/opt/cpanel/ea-ruby27/root/usr/share/gems/doc/rack-2.2.10/ri/Rack/Auth/Digest/MD5/[1;31mpassword[0ms_hashed%3f-i.ri
+/opt/cpanel/ea-ruby27/root/usr/share/gems/doc/rack-2.2.10/ri/Rack/Auth/Digest/MD5/[1;31mpassword[0ms_hashed-i.ri
+/opt/cpanel/ea-ruby27/root/usr/share/ruby/ruby-2.7.8/bundler/uri_[1;31mcredential[0ms_filter.rb
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.2rBwGMy/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.2rBwGMy/read_only_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.BqoNxrg/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.BqoNxrg/read_only_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.fVdNWb6/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.fVdNWb6/read_only_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.hOSeoGB/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.hOSeoGB/read_only_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Ht7GB4U/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Ht7GB4U/read_only_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.ihbTgs7/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.ihbTgs7/read_only_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lccvA5F/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lccvA5F/read_only_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lm3irJe/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.lm3irJe/read_only_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.MdpAX6r/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.MdpAX6r/read_only_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Qzrktw9/full_admin_[1;31mpassword[0m.txt
+/opt/cpanel/ea-ruby27/root/var/run/passenger-instreg/passenger.Qzrktw9/read_only_admin_[1;31mpassword[0m.txt
+
+[1;34m╔══════════╣ [1;32mChecking for TTY (sudo/su) passwords in audit logs
+[0m
+[1;34m╔══════════╣ [1;32mChecking for TTY (sudo/su) passwords in audit logs
+[0m
+[1;34m╔══════════╣ [1;32mSearching passwords inside logs (limit 70)
+[0m
+
+
+[1;34m                                ╔════════════════╗
+════════════════════════════════╣ [1;32mAPI Keys Regex[1;34m ╠════════════════════════════════
+[1;34m                                ╚════════════════╝[0m
+Regexes to search for API keys aren't activated, use param '-r' 
